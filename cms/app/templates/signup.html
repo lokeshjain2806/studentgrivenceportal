@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Signup</title>
+</head>
+<body>
+<form method="post">{% csrf_token %}
+    {% for fm in form %}
+             <div class="form-control">
+              {{fm.label_tag}} {{fm}} <small class="text-danger">{{fm.errors|striptags}}</small>
+              <br>
+             </div>
+    {% endfor %}
+    <input type="submit" value="Submit" class="btn1">
+</form>
+</body>
+</html>

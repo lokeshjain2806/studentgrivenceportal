@@ -1,0 +1,8 @@
+.row{
+    background: white;
+    border-radius: 30px;
+}
+img{
+    border-top-left-radius:30px;
+    border-bottom-left-radius:30px;
+}
