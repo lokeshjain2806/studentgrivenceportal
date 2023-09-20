@@ -31,6 +31,11 @@
         {% if user.is_superuser %}
         <ul class="navbar-nav">
             <li class="nav-item active">
+                <a class="nav-link ms-5 text-white" href="{% url 'ShowUsers' %}">Show All Users</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item active">
                 <a class="nav-link ms-5 text-white" href="{% url 'CreateGrievance' %}">Create Grievance User</a>
             </li>
         </ul>
@@ -38,7 +43,7 @@
        {% if user.is_superuser or user.is_staff %}
         <ul class="navbar-nav">
             <li class="nav-item active">
-                <a class="nav-link ms-5 text-white" href="#">Create Student Id</a>
+                <a class="nav-link ms-5 text-white" href="{% url 'CreateStudent' %}">Create Student Id</a>
             </li>
         </ul>
         <ul class="navbar-nav">

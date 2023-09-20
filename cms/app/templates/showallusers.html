@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}All Users{% endblock title %}
+{% block content %}
+<div class="container">
+    {% if users %}
+        <h1 style="text-align:center;">Users List</h1>
+        <table class="table table-bordered" style="text-align:center;">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Is Staff</th>
+                    <th>Is Student</th>
+                    <th>Delete User</th>
+                    <!-- Add more table headers for additional user details if needed -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.is_staff }}</td>
+                        <td>
+                            {% if user.is_staff %}
+                            False
+                            {% else %}
+                            True
+                            {% endif %}
+                        </td>
+                        <td><a href="{% url 'DeleteUsers' user.id %}"><button type="button"
+                                                                              class="btn btn-danger">Delete User</button></a></td>
+                    </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+    {% else %}
+            <h1 style="text-align:center;margin-top: 35%;">No Users Found</h1>
+    {% endif %}
+    </div>
+{% endblock content %}
