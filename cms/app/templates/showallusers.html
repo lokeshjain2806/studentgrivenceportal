@@ -5,6 +5,7 @@
 {% block content %}
 <div class="container">
     {% if users %}
+    {% if user.is_superuser %}
         <h1 style="text-align:center;">Users List</h1>
         <table class="table table-bordered" style="text-align:center;">
             <thead>
@@ -13,32 +14,84 @@
                     <th>Email</th>
                     <th>Is Staff</th>
                     <th>Is Student</th>
+                    <th>Update User Details</th>
                     <th>Delete User</th>
-                    <!-- Add more table headers for additional user details if needed -->
                 </tr>
             </thead>
             <tbody>
-                {% for user in users %}
+                {% for i in users %}
+                <tr>
+                    <td>{{ i.username|first|upper }}{{ i.username|slice:"1:" }}</td>
+                    <td>{{ i.email }}</td>
+                    <td>{{ i.is_staff }}</td>
+                    <td>
+                        {% if i.is_staff %}
+                        False
+                        {% else %}
+                        True
+                        {% endif %}
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-primary" data-target="#updatedetails{{ i.id }}" data-toggle="modal">Update User Details</button>
+                    </td>
+                    <td>
+                        <a href="{% url 'DeleteUsers' user.id %}">
+                            <button type="button" class="btn btn-danger">Delete User</button>
+                        </a>
+                    </td>
+                </tr>
+                <div class="modal" id="updatedetails{{ i.id }}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="text-primary">Update Details Of {{ i.username|title }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </tbody>
+            {% endif %}
+        </table>
+            {% if user.is_staff and not user.is_superuser %}
+            <h1 style="text-align:center;">Students List</h1>
+            <table class="table table-bordered" style="text-align:center;">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Roll Number</th>
+                    <th>School</th>
+                    <th>Branch</th>
+                    <th>Contact Number</th>
+                    <th>Update User Details</th>
+                    <th>Delete User</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in students %}
                     <tr>
                         <td>{{ user.username }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.is_staff }}</td>
-                        <td>
-                            {% if user.is_staff %}
-                            False
-                            {% else %}
-                            True
-                            {% endif %}
-                        </td>
-                        <td><a href="{% url 'DeleteUsers' user.id %}"><button type="button"
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.email_id }}</td>
+                        <td>{{ user.roll_number }}</td>
+                        <td>{{ user.School }}</td>
+                        <td>{{ user.Branch }}</td>
+                        <td>{{ user.contact_number }}</td>
+                        <td><button type="button" class="btn btn-primary"
+                                                                      data-target="#updatedetails" data-toggle="modal">Update User Details</button></td>
+                        <td><a href="{% url 'DeleteUsers' user.pk %}"><button type="button"
                                                                               class="btn btn-danger">Delete User</button></a></td>
                     </tr>
                 {% endfor %}
-
             </tbody>
-        </table>
+            {% endif %}
+            </table>
     {% else %}
             <h1 style="text-align:center;margin-top: 35%;">No Users Found</h1>
     {% endif %}
     </div>
+
+
 {% endblock content %}

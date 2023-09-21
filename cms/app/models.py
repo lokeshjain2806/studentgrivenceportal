@@ -21,8 +21,10 @@ class Student(models.Model):
         ('B.Tech CSE (UX/UI) with academic support of ImaginXP (4 Years)',
          'B.Tech CSE (UX/UI) with academic support of ImaginXP (4 Years)'),
         (
-            'B.Tech. Mechanical Engineering (Automotive Designs & Electric Vehicle) with academic support of Siemens (4 Years)',
-            'B.Tech. Mechanical Engineering (Automotive Designs & Electric Vehicle) with academic support of Siemens (4 Years)'),
+            'B.Tech. Mechanical Engineering (Automotive Designs & Electric Vehicle) with academic support of Siemens '
+            '(4 Years)',
+            'B.Tech. Mechanical Engineering (Automotive Designs & Electric Vehicle) with academic support of Siemens '
+            '(4 Years)'),
         ('BCA (AI & Data Science) with academic support of Samatrix & IBM (3 Years)',
          'BCA (AI & Data Science) with academic support of Samatrix & IBM (3 Years)'),
         ('BCA (Hons. with Research) (AI & Data Science) with academic support of Samatrix & IBM (4 Years)',
@@ -38,13 +40,17 @@ class Student(models.Model):
         ('BBA (Logistics & Supply Chain Management) with academic support of Safexpress (3 Years)',
          'BBA (Logistics & Supply Chain Management) with academic support of Safexpress (3 Years)'),
         (
-            'BBA (Hons. with Research) (Logistics & Supply Chain Management) with academic support of Safexpress (4 Years)',
-            'BBA (Hons. with Research) (Logistics & Supply Chain Management) with academic support of Safexpress (4 Years)'),
+            'BBA (Hons. with Research) (Logistics & Supply Chain Management) with academic support of Safexpress (4 '
+            'Years)',
+            'BBA (Hons. with Research) (Logistics & Supply Chain Management) with academic support of Safexpress (4 '
+            'Years)'),
         ('BBA (International Accounting & Finance) (ACCA - UK) with academic support of Grant Thornton (3 Years)',
          'BBA (International Accounting & Finance) (ACCA - UK) with academic support of Grant Thornton (3 Years)'),
         (
-            'BBA (Hons. with Research) (International Accounting & Finance) (ACCA - UK) with academic support of Grant Thornton (4 Years)',
-            'BBA (Hons. with Research) (International Accounting & Finance) (ACCA - UK) with academic support of Grant Thornton (4 Years)'),
+            'BBA (Hons. with Research) (International Accounting & Finance) (ACCA - UK) with academic support of '
+            'Grant Thornton (4 Years)',
+            'BBA (Hons. with Research) (International Accounting & Finance) (ACCA - UK) with academic support of'
+            'Grant Thornton (4 Years)'),
         ('BBA (Entrepreneurship) with academic support of GCEC Global Foundation (3 Years)',
          'BBA (Entrepreneurship) with academic support of GCEC Global Foundation (3 Years)'),
         ('BBA (Hons. with Research) (Entrepreneurship) with academic support of GCEC Global Foundation(4 Years)',
@@ -65,11 +71,15 @@ class Student(models.Model):
         ('BBA (Finance) (3 Years)', 'BBA (Finance) (3 Years)'),
         ('BBA (Hons. with Research) (Finance) (4 Years)', 'BBA (Hons. with Research) (Finance) (4 Years)'),
         (
-            'B.Com. (Hons.) (International Accounting & Finance ) (ACCA-UK) with academic support of Grant Thornton (3 Years)',
-            'B.Com. (Hons.) (International Accounting & Finance ) (ACCA-UK) with academic support of Grant Thornton (3 Years)'),
+            'B.Com. (Hons.) (International Accounting & Finance ) (ACCA-UK) with academic support of Grant Thornton ('
+            '3 Years)',
+            'B.Com. (Hons.) (International Accounting & Finance ) (ACCA-UK) with academic support of Grant Thornton ('
+            '3 Years)'),
         (
-            'B.com. (Hons. with Research) (International Accounting & Finance) (ACCA-UK) with academic support of Grant Thornton (4 Years)',
-            'B.com. (Hons. with Research) (International Accounting & Finance) (ACCA-UK) with academic support of Grant Thornton (4 Years)'),
+            'B.com. (Hons. with Research) (International Accounting & Finance) (ACCA-UK) with academic support of '
+            'Grant Thornton (4 Years)',
+            'B.com. (Hons. with Research) (International Accounting & Finance) (ACCA-UK) with academic support of'
+            'Grant Thornton (4 Years)'),
         ('B.Com. (Hons.) with academic support of NSE Academy (3 Years)',
          'B.Com. (Hons.) with academic support of NSE Academy (3 Years)'),
         ('B.Com. (Hons. with Research) with academic support of NSE Academy (4 Years)',
@@ -79,56 +89,88 @@ class Student(models.Model):
         ('B.Com. (Hons. with Research) with academic support of NSE Academy (4 Years)',
          'B.Com. (Hons. with Research) with academic support of NSE Academy (4 Years)'),
         (
-            'B.Com. Programme with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt. Jobs (3 Years)',
-            'B.Com. Programme with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt. Jobs (3 Years)'),
+            'B.Com. Programme with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central '
+            'and State Govt. Jobs (3 Years)',
+            'B.Com. Programme with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central '
+            'and State Govt. Jobs (3 Years)'),
         (
-            'BBA LL.B. (Hons.) with Specialization in Business Laws/Criminal Laws/Constitutional laws/International Laws (5 Years)',
-            'BBA LL.B. (Hons.) with Specialization in Business Laws/Criminal Laws/Constitutional laws/International Laws (5 Years)'),
+            'BBA LL.B. (Hons.) with Specialization in Business Laws/Criminal Laws/Constitutional laws/International '
+            'Laws (5 Years)',
+            'BBA LL.B. (Hons.) with Specialization in Business Laws/Criminal Laws/Constitutional laws/International '
+            'Laws (5 Years)'),
         (
-            'B.Com. LL.B. (Hons.) with Specialization in Business Laws/Criminal Laws/Constitutional laws/International Laws (5 Years)',
-            'B.Com. LL.B. (Hons.) with Specialization in Business Laws/Criminal Laws/Constitutional laws/International Laws (5 Years)'),
+            'B.Com. LL.B. (Hons.) with Specialization in Business Laws/Criminal Laws/Constitutional '
+            'laws/International Laws (5 Years)',
+            'B.Com. LL.B. (Hons.) with Specialization in Business Laws/Criminal Laws/Constitutional '
+            'laws/International Laws (5 Years)'),
         (
-            'B.A. LL.B (Hons.) with Specialization in Business Laws/Criminal Laws/Constitutional laws/International Laws (5 Years)',
-            'B.A. LL.B (Hons.) with Specialization in Business Laws/Criminal Laws/Constitutional laws/International Laws (5 Years)'),
+            'B.A. LL.B (Hons.) with Specialization in Business Laws/Criminal Laws/Constitutional laws/International '
+            'Laws (5 Years)',
+            'B.A. LL.B (Hons.) with Specialization in Business Laws/Criminal Laws/Constitutional laws/International '
+            'Laws (5 Years)'),
         (
-            'LL.B. (Hons.) with SpecializatioSchooln in Business Laws/Criminal Laws/Constitutional laws/International Laws (3 Years)',
-            'LL.B. (Hons.) with Specialization in Business Laws/Criminal Laws/Constitutional laws/International Laws (3 Years)'),
+            'LL.B. (Hons.) with SpecializatioSchooln in Business Laws/Criminal Laws/Constitutional laws/International '
+            'Laws (3 Years)',
+            'LL.B. (Hons.) with Specialization in Business Laws/Criminal Laws/Constitutional laws/International Laws '
+            '(3 Years)'),
         ('Bachelor of Pharmacy (B.Pharm.) (4 Years)', 'Bachelor of Pharmacy (B.Pharm.) (4 Years)'),
         ('Bachelor of Physiotherapy (BPT) (4 Years)', 'Bachelor of Physiotherapy (BPT) (4 Years)'),
         ('B.Pharm. (Lateral Entry) (3 Years)', 'B.Pharm. (Lateral Entry) (3 Years)'),
         (
-        'B.A. (Hons.) English with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt Jobs (3 Years)',
-        'B.A. (Hons.) English with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt Jobs (3 Years)'),
+            'B.A. (Hons.) English with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for '
+            'Central and State Govt Jobs (3 Years)',
+            'B.A. (Hons.) English with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for '
+            'Central and State Govt Jobs (3 Years)'),
         (
-        'B.A. (Hons. with Research) English with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt Jobs (4 Years)',
-        'B.A. (Hons. with Research) English with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt Jobs (4 Years)'),
+            'B.A. (Hons. with Research) English with Preparation for Competitive Exam (Banking/ Insurance/ '
+            'Railways/SSC) for Central and State Govt Jobs (4 Years)',
+            'B.A. (Hons. with Research) English with Preparation for Competitive Exam (Banking/ Insurance/ '
+            'Railways/SSC) for Central and State Govt Jobs (4 Years)'),
         (
-        'B.A. (Hons.) Economics with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt Jobs (3 Years)',
-        'B.A. (Hons.) Economics with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt Jobs (3 Years)'),
+            'B.A. (Hons.) Economics with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for '
+            'Central and State Govt Jobs (3 Years)',
+            'B.A. (Hons.) Economics with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for '
+            'Central and State Govt Jobs (3 Years)'),
         (
-        'B.A. (Hons. with Research) Economics with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt Jobs (4 Years)',
-        'B.A. (Hons. with Research) Economics with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt Jobs (4 Years)'),
+            'B.A. (Hons. with Research) Economics with Preparation for Competitive Exam (Banking/ Insurance/ '
+            'Railways/SSC) for Central and State Govt Jobs (4 Years)',
+            'B.A. (Hons. with Research) Economics with Preparation for Competitive Exam (Banking/ Insurance/ '
+            'Railways/SSC) for Central and State Govt Jobs (4 Years)'),
         (
-        'B.A. (Hons.) Psychology with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt Jobs (3 Years)',
-        'B.A. (Hons.) Psychology with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt Jobs (3 Years)'),
+            'B.A. (Hons.) Psychology with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for '
+            'Central and State Govt Jobs (3 Years)',
+            'B.A. (Hons.) Psychology with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for '
+            'Central and State Govt Jobs (3 Years)'),
         (
-        'B.A. (Hons. with Research) Psychology with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt Jobs (4 Years)',
-        'B.A. (Hons. with Research) Psychology with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt Jobs (4 Years)'),
+            'B.A. (Hons. with Research) Psychology with Preparation for Competitive Exam (Banking/ Insurance/ '
+            'Railways/SSC) for Central and State Govt Jobs (4 Years)',
+            'B.A. (Hons. with Research) Psychology with Preparation for Competitive Exam (Banking/ Insurance/ '
+            'Railways/SSC) for Central and State Govt Jobs (4 Years)'),
         (
-        'B.A. (Hons.) Chinese with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt Jobs (3 Years)',
-        'B.A. (Hons.) Chinese with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt Jobs (3 Years)'),
+            'B.A. (Hons.) Chinese with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for '
+            'Central and State Govt Jobs (3 Years)',
+            'B.A. (Hons.) Chinese with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for '
+            'Central and State Govt Jobs (3 Years)'),
         (
-        'B.A. (Hons. with Research) Chinese with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt Jobs (4 Years)',
-        'B.A. (Hons. with Research) Chinese with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt Jobs (4 Years)'),
+            'B.A. (Hons. with Research) Chinese with Preparation for Competitive Exam (Banking/ Insurance/ '
+            'Railways/SSC) for Central and State Govt Jobs (4 Years)',
+            'B.A. (Hons. with Research) Chinese with Preparation for Competitive Exam (Banking/ Insurance/ '
+            'Railways/SSC) for Central and State Govt Jobs (4 Years)'),
         (
-        'B.A. (Hons.) Political Science with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt Jobs (3 Years)',
-        'B.A. (Hons.) Political Science with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt Jobs (3 Years)'),
+            'B.A. (Hons.) Political Science with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) '
+            'for Central and State Govt Jobs (3 Years)',
+            'B.A. (Hons.) Political Science with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) '
+            'for Central and State Govt Jobs (3 Years)'),
         (
-        'B.A. (Hons. with Research) Political Science with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt Jobs (4 Years)',
-        'B.A. (Hons. with Research) Political Science with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt Jobs (4 Years)'),
+            'B.A. (Hons. with Research) Political Science with Preparation for Competitive Exam (Banking/ Insurance/ '
+            'Railways/SSC) for Central and State Govt Jobs (4 Years)',
+            'B.A. (Hons. with Research) Political Science with Preparation for Competitive Exam (Banking/ Insurance/ '
+            'Railways/SSC) for Central and State Govt Jobs (4 Years)'),
         (
-        'B.A. Programme with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt Jobs (3 Years)',
-        'B.A. Programme with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt Jobs (3 Years)'),
+            'B.A. Programme with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and '
+            'State Govt Jobs (3 Years)',
+            'B.A. Programme with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and '
+            'State Govt Jobs (3 Years)'),
         ('Bachelor of Architecture (B.Arch) (5 Years)', 'Bachelor of Architecture (B.Arch) (5 Years)'),
         ('Bachelor of Fine Arts (BFA) (4 Years)', 'Bachelor of Fine Arts (BFA) (4 Years)'),
         ('Bachelor of Design (B.Des.) (4 Years)', 'Bachelor of Design (B.Des.) (4 Years)'),
@@ -141,23 +183,35 @@ class Student(models.Model):
         ('B.A. (Hons. with Research) (Journalism And Mass Communication) (4 Years)',
          'B.A. (Hons. with Research) (Journalism And Mass Communication) (4 Years)'),
         (
-        'B.Sc. (Hons.) Physics with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt. Jobs (3 Years)',
-        'B.Sc. (Hons.) Physics with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt. Jobs (3 Years)'),
+            'B.Sc. (Hons.) Physics with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for '
+            'Central and State Govt. Jobs (3 Years)',
+            'B.Sc. (Hons.) Physics with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for '
+            'Central and State Govt. Jobs (3 Years)'),
         (
-        'B.Sc. (Hons. with Research ) Physics with preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt. Jobs (4 Years)',
-        'B.Sc. (Hons. with Research ) Physics with preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt. Jobs (4 Years)'),
+            'B.Sc. (Hons. with Research ) Physics with preparation for Competitive Exam (Banking/ Insurance/ '
+            'Railways/SSC) for Central and State Govt. Jobs (4 Years)',
+            'B.Sc. (Hons. with Research ) Physics with preparation for Competitive Exam (Banking/ Insurance/ '
+            'Railways/SSC) for Central and State Govt. Jobs (4 Years)'),
         (
-        'B.Sc. (Hons.) Chemistry with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt. Jobs (3 Years)',
-        'B.Sc. (Hons.) Chemistry with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt. Jobs (3 Years)'),
+            'B.Sc. (Hons.) Chemistry with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for '
+            'Central and State Govt. Jobs (3 Years)',
+            'B.Sc. (Hons.) Chemistry with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for '
+            'Central and State Govt. Jobs (3 Years)'),
         (
-        'B.Sc. (Hons. with Research) Chemistry with preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt. Jobs (4 Years)',
-        'B.Sc. (Hons. with Research) Chemistry with preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt. Jobs (4 Years)'),
+            'B.Sc. (Hons. with Research) Chemistry with preparation for Competitive Exam (Banking/ Insurance/'
+            'Railways/SSC) for Central and State Govt. Jobs (4 Years)',
+            'B.Sc. (Hons. with Research) Chemistry with preparation for Competitive Exam (Banking/ Insurance/ '
+            'Railways/SSC) for Central and State Govt. Jobs (4 Years)'),
         (
-        'B.Sc. (Hons.) Maths with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt. Jobs (3 Years)',
-        'B.Sc. (Hons.) Maths with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt. Jobs (3 Years)'),
+            'B.Sc. (Hons.) Maths with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central '
+            'and State Govt. Jobs (3 Years)',
+            'B.Sc. (Hons.) Maths with Preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central '
+            'and State Govt. Jobs (3 Years)'),
         (
-        'B.Sc. (Hons. with Research.) Maths with preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt. Jobs (4 Years)',
-        'B.Sc. (Hons. with Research.) Maths with preparation for Competitive Exam (Banking/ Insurance/ Railways/SSC) for Central and State Govt. Jobs (4 Years)'),
+            'B.Sc. (Hons. with Research.) Maths with preparation for Competitive Exam (Banking/ Insurance/ '
+            'Railways/SSC) for Central and State Govt. Jobs (4 Years)',
+            'B.Sc. (Hons. with Research.) Maths with preparation for Competitive Exam (Banking/ Insurance/ '
+            'Railways/SSC) for Central and State Govt. Jobs (4 Years)'),
         ('B.Sc. (Hons.) Forensic Science (3 Years)', 'B.Sc. (Hons.) Forensic Science (3 Years)'),
         ('B.Sc. (Hons. with Research) Forensic Science (4 Years)',
          'B.Sc. (Hons. with Research) Forensic Science (4 Years)'),
@@ -180,8 +234,10 @@ class Student(models.Model):
          'MBA (Digital Marketing) with academic support of Imarticus Learning (2 Years)'),
         ('Master of Commerce (M.Com) (2 Years)', 'Master of Commerce (M.Com) (2 Years)'),
         (
-        'LL.M. with Specialization in Corporate Law/Cyber Law/Human Rights/Criminal Law/Intellectual Property Rights(1 Years)',
-        'LL.M. with Specialization in Corporate Law/Cyber Law/Human Rights/Criminal Law/Intellectual Property Rights(1 Years)'),
+            'LL.M. with Specialization in Corporate Law/Cyber Law/Human Rights/Criminal Law/Intellectual Property '
+            'Rights(1 Years)',
+            'LL.M. with Specialization in Corporate Law/Cyber Law/Human Rights/Criminal Law/Intellectual Property '
+            'Rights(1 Years)'),
         ('Master of Pharmacy (M.Pharm.) - Pharmaceutics (2 Years)',
          'Master of Pharmacy (M.Pharm.) - Pharmaceutics (2 Years)'),
         ('Master of Pharmacy (M.Pharm.) - Pharmacology (2 Years)',
@@ -277,4 +333,3 @@ class Complain(models.Model):
     complain_type = models.CharField(choices=COMPLAIN_CATEGORY, max_length=80)
     subject = models.CharField(max_length=255)
     decription = models.TextField()
-

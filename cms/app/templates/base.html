@@ -40,6 +40,13 @@
             </li>
         </ul>
         {% endif %}
+        {% if user.is_staff and not user.is_superuser %}
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link ms-5 text-white" href="{% url 'ShowUsers' %}">Show All Students</a>
+            </li>
+        </ul>
+        {% endif %}
        {% if user.is_superuser or user.is_staff %}
         <ul class="navbar-nav">
             <li class="nav-item active">
@@ -56,6 +63,11 @@
         <ul class="navbar-nav">
             <li class="nav-item active">
                 <a class="nav-link ms-5 text-white" href="#">Create Grievance</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link ms-5 text-white" href="#">Check Status</a>
             </li>
         </ul>
         {% endif %}

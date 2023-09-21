@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views import View
@@ -86,7 +87,8 @@ class CreateStudent(View):
 @login_required(login_url='/login')
 def ShowUsers(request):
     all_users = User.objects.filter(is_superuser=False)
-    return render(request, 'showallusers.html', {'users': all_users})
+    students = Student.objects.all()
+    return render(request, 'showallusers.html', {'users': all_users, 'students': students})
 
 
 def DeleteUser(request, pk):
@@ -98,4 +100,3 @@ class UserLogout(View):
     def get(self, request):
         logout(request)
         return redirect('LoginPage')
-
