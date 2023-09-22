@@ -37,7 +37,7 @@
                                 data-toggle="modal">Update User Details</button>
                     </td>
                     <td>
-                        <a href="{% url 'DeleteUsers' user.id %}">
+                        <a href="{% url 'DeleteUsers' i.id %}">
                             <button type="button" class="btn btn-danger">Delete User</button>
                         </a>
                     </td>
@@ -89,18 +89,18 @@
                 </tr>
             </thead>
             <tbody>
-                {% for user in students %}
+                {% for i in students %}
                     <tr>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.name }}</td>
-                        <td>{{ user.email_id }}</td>
-                        <td>{{ user.roll_number }}</td>
-                        <td>{{ user.School }}</td>
-                        <td>{{ user.Branch }}</td>
-                        <td>{{ user.contact_number }}</td>
+                        <td>{{ i.username }}</td>
+                        <td>{{ i.name }}</td>
+                        <td>{{ i.email_id }}</td>
+                        <td>{{ i.roll_number }}</td>
+                        <td>{{ i.School }}</td>
+                        <td>{{ i.Branch }}</td>
+                        <td>{{ i.contact_number }}</td>
                         <td><button type="button" class="btn btn-primary"
                                                                       data-target="#updatedetails" data-toggle="modal">Update User Details</button></td>
-                        <td><a href="{% url 'DeleteUsers' user.pk %}"><button type="button"
+                        <td><a href="{% url 'DeleteUsers' i.pk %}"><button type="button"
                                                                               class="btn btn-danger">Delete User</button></a></td>
                     </tr>
                 {% endfor %}
