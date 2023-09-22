@@ -11,10 +11,10 @@
         </div>
         <div class="col-lg-7">
             <h1 class="font-weight-bold py-3 px-5 pt-5">Login Your Account</h1>
-            <form action="{% url 'LoginPage' %}" method="POST" novalidate class="shadow p-5">{% csrf_token %}
+            <form action="{% url 'LoginPage' %}" method="POST" class="shadow p-5">{% csrf_token %}
             {% for fm in form %}
              <div class="form-control">
-              {{fm.label_tag}} {{fm}} <small class="text-danger">{{fm.errors|striptags}}</small>
+              {{fm.label_tag}} {{fm}} <small class="text-danger"></small>
               <br>
              </div>
             {% endfor %}

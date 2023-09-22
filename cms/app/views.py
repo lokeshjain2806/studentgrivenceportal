@@ -88,7 +88,18 @@ class CreateStudent(View):
 def ShowUsers(request):
     all_users = User.objects.filter(is_superuser=False)
     students = Student.objects.all()
-    return render(request, 'showallusers.html', {'users': all_users, 'students': students})
+    grievanceform = GrievanceSignupform
+    studentform = StudentSignupform
+    return render(request, 'showallusers.html', {'users': all_users, 'students': students, 'grievanceform': grievanceform, 'studentform': studentform})
+
+
+class UserDetails(View):
+    def get(self, request, pk):
+        data = User.objects.get(pk=pk)
+        grievanceform = GrievanceSignupform(instance=data)
+        studentform = StudentSignupform(instance=data)
+        return render(request, 'showallusers.html', {'grievanceform': grievanceform, 'studentform': studentform})
+
 
 
 def DeleteUser(request, pk):

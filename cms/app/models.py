@@ -282,10 +282,10 @@ class Student(models.Model):
     username = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     name = models.CharField(max_length=255)
     roll_number = models.IntegerField(null=True, blank=True)
-    School = models.CharField(choices=SCHOOL_CHOICES, max_length=60)
-    Branch = models.CharField(choices=COURSE_CHOICES, max_length=255)
-    contact_number = models.IntegerField(validators=[MaxValueValidator(9999999999)])
-    email_id = models.EmailField(max_length=255)
+    School = models.CharField(choices=SCHOOL_CHOICES, max_length=60, null=True, blank=True)
+    Branch = models.CharField(choices=COURSE_CHOICES, max_length=255, null=True, blank=True)
+    contact_number = models.IntegerField(validators=[MaxValueValidator(9999999999)], null=True, blank=True)
+    email_id = models.EmailField(max_length=255, null=True, blank=True)
     USERNAME_FIELD = 'username'
 
     def __str__(self):

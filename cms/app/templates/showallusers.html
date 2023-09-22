@@ -32,7 +32,9 @@
                         {% endif %}
                     </td>
                     <td>
-                        <button type="button" class="btn btn-primary" data-target="#updatedetails{{ i.id }}" data-toggle="modal">Update User Details</button>
+                        <button type="button" class="btn btn-primary"
+                                                data-target="#updatedetails{{ i.id }}"
+                                data-toggle="modal">Update User Details</button>
                     </td>
                     <td>
                         <a href="{% url 'DeleteUsers' user.id %}">
@@ -45,6 +47,23 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h3 class="text-primary">Update Details Of {{ i.username|title }}</h3>
+                                <button type="submit" class="close" data-dismiss="modal"> &times; </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="#" method="post" novalidate>{% csrf_token %}
+                                    {% if i.is_staff %}
+                                    {% for fm in grievanceform %}
+                                    {{fm.label_tag}} {{fm}} <small class="text-danger">{{fm.errors|striptags}}</small>
+                                    {% endfor %}
+                                    {% else %}
+                                    {% for fm in studentform %}
+                                        {{fm.label_tag}} {{fm}} <small class="text-danger"></small>
+                                    {% endfor %}
+                                    {% endif %}
+                                    <div class="text-center">
+                                        <input type="submit" value="Submit" class="btn1">
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
