@@ -77,28 +77,88 @@ class CreateStudent(View):
                 email_id=form.cleaned_data['email']
             )
             student.save()
-
             return render(request, 'createstudentuser.html', {'form': form})
         else:
             form = StudentSignupform
             return redirect('CreateStudent')
 
 
-@login_required(login_url='/login')
-def ShowUsers(request):
-    all_users = User.objects.filter(is_superuser=False)
-    students = Student.objects.all()
-    grievanceform = GrievanceSignupform
-    studentform = StudentSignupform
-    return render(request, 'showallusers.html', {'users': all_users, 'students': students, 'grievanceform': grievanceform, 'studentform': studentform})
+class ShowUsers(View):
+    def get(self, request):
+        all_users = User.objects.filter(is_superuser=False)
+        students = Student.objects.all()
+        grievanceform = GrievanceSignupform
+        studentform = StudentSignupform
+        return render(request, 'showallusers.html', {'users': all_users, 'students': students, 'grievanceform': grievanceform, 'studentform': studentform})
+
+    def post(self, request):
+        all_users = User.objects.filter(is_superuser=False)
+        students = Student.objects.all()
+        grievanceform = GrievanceSignupform(request.POST)
+        studentform = StudentSignupform(request.POST)
+        if studentform.is_valid():
+            if studentform.is_valid():
+                try:
+                    user = User.objects.get(username=studentform.cleaned_data['username'])
+                except User.DoesNotExist:
+                    return HttpResponse("User does not exist")
+                user.set_password(studentform.cleaned_data['password1'])
+                user.save()
+                username = studentform.cleaned_data['username']
+            student = Student.objects.get(username=username)(
+                username=user,
+                name=studentform.cleaned_data['first_name'] + ' ' + studentform.cleaned_data['last_name'],
+                roll_number=studentform.cleaned_data['roll_number'],
+                School=studentform.cleaned_data['school'],
+                Branch=studentform.cleaned_data['branch'],
+                contact_number=studentform.cleaned_data['contact_number'],
+                email_id=studentform.cleaned_data['email'],
+            )
+            student.save()
+            username = studentform.cleaned_data['username']
+            password = studentform.cleaned_data['password1']
+            email = studentform.cleaned_data['email']
+            first_name = studentform.cleaned_data['first_name']
+            last_name = studentform.cleaned_data['last_name']
+
+            user = User.objects.get(username=username)
+            user.set_password(password)
+            user.email = email
+            user.first_name = first_name
+            user.last_name = last_name
+            user.save()
+        if grievanceform.is_valid():
+            if grievanceform.is_valid():
+                try:
+                    user = User.objects.get(username=grievanceform.cleaned_data['username'])
+                except User.DoesNotExist:
+                    return HttpResponse("User does not exist")
+                user.set_password(grievanceform.cleaned_data['password1'])
+                user.save()
+            username = grievanceform.cleaned_data['username']
+            password = grievanceform.cleaned_data['password1']
+            email = grievanceform.cleaned_data['email']
+            first_name = grievanceform.cleaned_data['first_name']
+            last_name = grievanceform.cleaned_data['last_name']
+
+            user = User.objects.get(username=username)
+            user.set_password(password)
+            user.email = email
+            user.first_name = first_name
+            user.last_name = last_name
+            user.save()
+        return render(request, 'showallusers.html',
+                      {'users': all_users, 'students': students, 'grievanceform': grievanceform,
+                       'studentform': studentform})
 
 
-class UserDetails(View):
-    def get(self, request, pk):
-        data = User.objects.get(pk=pk)
-        grievanceform = GrievanceSignupform(instance=data)
-        studentform = StudentSignupform(instance=data)
-        return render(request, 'showallusers.html', {'grievanceform': grievanceform, 'studentform': studentform})
+
+# class UserDetails(View):
+#     def get(self, request, pk):
+#         data = User.objects.get(pk=pk)
+#         grievanceform = GrievanceSignupform(instance=data)
+#         studentform = StudentSignupform(instance=data)
+#         return render(request, 'showallusers.html', {'grievanceform': grievanceform, 'studentform': studentform})
 
 
 
