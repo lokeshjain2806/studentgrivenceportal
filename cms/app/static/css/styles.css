@@ -8,6 +8,12 @@ img{
 }
 .navbar{
     border-style: double;
+    border-color: white;
+    background: white;
+    border-width: 10px;
+}
+.navbar{
+    border-style: double;
     border-color : white;
     background : white;
     border-width : 10px;
