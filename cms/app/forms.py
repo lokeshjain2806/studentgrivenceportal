@@ -86,12 +86,11 @@ class LoginForm(forms.Form):
         fields = ['username', 'password']
 
 
-class CreateGrievanceFrom(forms.ModelForm):
-    student = forms.CharField(label='Student', widget=forms.TextInput(attrs={'class': 'form-control'}))
+class CreateGrievanceForm(forms.Form):
     complain_type = forms.ChoiceField(label='Complain Category', choices=Complain.COMPLAIN_CATEGORY, widget=forms.Select(attrs={'class': 'form-control'}))
     subject = forms.CharField(label='Subject', widget=forms.TextInput(attrs={'class': 'form-control'}))
-    decription = forms.CharField(label='Description', widget=forms.Textarea(attrs={'class': 'form-control'}))
+    description = forms.CharField(label='Description', widget=forms.Textarea(attrs={'class': 'form-control'}))
 
     class Meta:
         model = Complain
-        fields = ['student', 'complain_type', 'subject', 'decription']
+        fields = ['complain_type', 'subject', 'description']

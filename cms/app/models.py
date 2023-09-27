@@ -8,6 +8,7 @@ class Student(models.Model):
     COURSE_CHOICES = (
         ('Select Your Course', 'Select Your Course'),
         (
+
             'B.Tech in Computer Science and Engineering (4 Years)',
             'B.Tech in Computer Science and Engineering (4 Years)'),
         ('B.Tech CSE (AI & ML) with academic support of Samatrix & IBM (4 Years)',
@@ -291,19 +292,11 @@ class Student(models.Model):
     def __str__(self):
         return self.name
 
-
-class Grievance(models.Model):
-    STATUS_CHOICES = (
-        ('Pending', 'Pending'),
-        ('In Process', 'In Process'),
-        ('Success', 'Success'),
-    )
-    username = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    name = models.CharField(max_length=255)
-    status = models.CharField(choices=STATUS_CHOICES, max_length=100)
-
-    def __str__(self):
-        return self.username
+    class Meta:
+        permissions = [
+            ("can_view_superuser", "Can View SuperUser"),
+            ("can_view_staff", "Can View Staff"),
+        ]
 
 
 class Complain(models.Model):
@@ -332,4 +325,20 @@ class Complain(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     complain_type = models.CharField(choices=COMPLAIN_CATEGORY, max_length=80)
     subject = models.CharField(max_length=255)
-    decription = models.TextField()
+    description = models.TextField()
+
+
+class GrievancePlaced(models.Model):
+    STATUS_CHOICES = (
+        ('Pending', 'Pending'),
+        ('In Process', 'In Process'),
+        ('Success', 'Success'),
+    )
+    username = models.ForeignKey(User, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    complain_date = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(choices=STATUS_CHOICES, max_length=100, default='Pending')
+
+    def __str__(self):
+        return self.username

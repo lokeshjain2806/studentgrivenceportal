@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Search For User {{query}}{% endblock title %}
+
+{% block content %}
+
+<div class="container">
+{% if data %}
+    <h1 style="text-align:center;">Users List</h1>
+    <div class="table-responsive">
+    <table class="table table-bordered" style="text-align:center;">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Is Staff</th>
+                    <th>Is Student</th>
+                    <th>Update User Details</th>
+                    <th>Delete User</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in data %}
+                <tr>
+                    <td>{{ i.username|first|upper }}{{ i.username|slice:"1:" }}</td>
+                    <td>{{ i.email }}</td>
+                    <td>{{ i.is_staff }}</td>
+                    <td>
+                        {% if i.is_staff %}
+                        False
+                        {% else %}
+                        True
+                        {% endif %}
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-primary custom-btn-lg"
+                                                data-target="#updatedetails{{ i.id }}">Update User Details</button>
+                    </td>
+                    <td>
+                        <a href="{% url 'DeleteUsers' i.id %}">
+                            <button type="button" class="btn btn-danger custom-btn-lg">Delete User</button>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+<h1 style="text-align:center;margin-top: 35%;">No Users Found</h1>
+{% endif %}
+</div>
+
+{% endblock content %}

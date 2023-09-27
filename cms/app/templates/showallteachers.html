@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Show All Teachers{% endblock title %}
+
+{% block content %}
+
+<div class="container">
+{% if data %}
+<form method="get" class="d-flex" action="/home/searchteachers/">
+           <input class="form-control me-2" type="search" placeholder="Search By Username" aria-label="username"
+                  name="username"
+                  id="username">
+           <button class="btn btn-warning" type="submit">Search</button>
+</form>
+    <h1 style="text-align:center;">Teachers List</h1>
+    <div class="table-responsive">
+    <table class="table table-bordered" style="text-align:center;">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Update User Details</th>
+                    <th>Delete User</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in data %}
+                <tr>
+                    <td>{{ i.username|first|upper }}{{ i.username|slice:"1:" }}</td>
+                    <td>{{ i.first_name|first|upper }}{{ i.first_name|slice:"1:" }}</td>
+                    <td>{{ i.last_name|first|upper }}{{ i.last_name|slice:"1:" }}</td>
+                    <td>{{ i.email }}</td>
+                    <td>
+                        <a href="{% url 'updateuserdetails' i.id %}"><button type="button" class="btn btn-primary custom-btn-lg"
+                                                data-target="#updatedetails{{ i.id }}">Update User Details</button></a>
+                    </td>
+                    <td>
+                        <a href="{% url 'DeleteUsers' i.id %}">
+                            <button type="button" class="btn btn-danger custom-btn-lg">Delete User</button>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+<h1 style="text-align:center;margin-top: 35%;">No Users Found</h1>
+{% endif %}
+</div>
+
+{% endblock content %}

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Search For Student {{query}}{% endblock title %}
+
+{% block content %}
+
+<div class="container">
+{% if data %}
+    <h1 style="text-align:center;">Students List</h1>
+    <div class="table-responsive">
+    <table class="table table-bordered" style="text-align:center;">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Roll Number</th>
+                    <th>School</th>
+                    <th>Branch</th>
+                    <th>Contact Number</th>
+                    <th>Update User Details</th>
+                    <th>Delete User</th>
+                </tr>
+            </thead>
+            <tbody>
+            <tbody>
+                {% for i in data %}
+                    <tr>
+                        <td >{{ i.username|capfirst }}</td>
+                        <td>{{ i.name|capfirst }}</td>
+                        <td>{{ i.email_id }}</td>
+                        <td>{{ i.roll_number }}</td>
+                        <td>{{ i.School }}</td>
+                        <td>{{ i.Branch }}</td>
+                        <td>{{ i.contact_number }}</td>
+                        <td><a href="{% url 'updateuserdetails' i.pk %}"><button type="button" class="btn btn-primary custom-btn-lg"
+                                                data-target="#updatedetails{{ i.id }}"
+                                data-toggle="modal">Update User Details</button></a>
+                        <td><a href="{% url 'DeleteUsers' i.pk %}"><button type="button"
+                                                                              class="btn btn-danger custom-btn-lg">Delete
+                        User</button></a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+<h1 style="text-align:center;margin-top: 35%;">No Users Found</h1>
+{% endif %}
+</div>
+{% endblock content %}
