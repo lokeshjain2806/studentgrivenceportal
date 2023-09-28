@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Show All Grivances {% endblock title %}
+
+{% block content %}
+<div class="container">
+{% if grivances %}
+    <h1 style="text-align:center;">Grivances List</h1>
+    <div class="table-responsive">
+    <table class="table table-bordered" style="text-align:center;">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Student</th>
+                    <th>Complain Type</th>
+                    <th>Complain Date</th>
+                    <th>Subject</th>
+                    <th>Description</th>
+                    <th>Current Status</th>
+                    <th>Update Status</th>
+                </tr>
+            </thead>
+            <tbody>
+            <tbody>
+                {% for i in grivances %}
+                    <tr>
+                        <td >{{ i.username }}</td>
+                        <td>{{ i.student }}</td>
+                        <td>{{ i.complain_type }}</td>
+                        <td>{{ i.complain_date }}</td>
+                        <td>{{ i.subject }}</td>
+                        <td>{{ i.description }}</td>
+                        <td>{{ i.status }}</td>
+                        <td><a href="{% url 'UpdateGrivanceStatus' i.pk %}"><button type="button"
+                                                                                class="btn btn-primary custom-btn-lg"
+                                >Update Grivance Status</button></a>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+<h1 style="text-align:center;margin-top: 35%;">No Grivances</h1>
+{% endif %}
+</div>
+
+{% endblock content %}

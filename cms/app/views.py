@@ -5,7 +5,9 @@ from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from .forms import GrievanceSignupform, LoginForm, StudentSignupform, CreateGrievanceForm
+from django.views.generic import ListView, FormView
+
+from .forms import GrievanceSignupform, LoginForm, StudentSignupform, CreateGrievanceForm, UpdateGrievanceStatusForm
 from .models import Student, Complain
 from django.contrib.auth.models import Permission
 
@@ -26,12 +28,16 @@ class LoginPage(View):
             user = authenticate(request, username=username, password=password)
             if user:
                 login(request, user)  # Log the user in
-                return redirect('Home')  # Redirect to the home page upon successful login
+                return redirect('LoginHome')  # Redirect to the home page upon successful login
             else:
                 return redirect('LoginPage')
 
 
 def Dashboard(request):
+    return render(request, 'base.html')
+
+
+def Home(request):
     return render(request, 'home.html')
 
 
@@ -231,6 +237,7 @@ class CreateGrievanceView(View):
         if form.is_valid():
             student_instance = request.user.student
             complain = Complain.objects.create(
+                username = request.user,
                 student=student_instance,
                 complain_type=form.cleaned_data['complain_type'],
                 subject=form.cleaned_data['subject'],
@@ -239,10 +246,47 @@ class CreateGrievanceView(View):
             return redirect("Home")
 
 
-def Student_Show_Grievance(request, id):
+def Student_Show_Grievance(request):
     if request.user.is_authenticated:
         user = request.user.id
-        print(user)
-        complain = Complain.objects.filter(student=id)
+        complain = Complain.objects.filter(student=user)
         if complain:
-            return render(request, 'showgrivance.html')
+            return render(request, 'showgrivance.html', {'complains': complain})
+        else:
+            return HttpResponse("You have no complaints.")
+
+
+class ShowAllGrivances(ListView):
+    template_name = 'showallgrivances.html'
+    context_object_name = 'grivances'
+
+    def get_queryset(self):
+        queryset = Complain.objects.all()
+        return queryset
+
+
+class UpdateGrivanceStatus(View):
+
+    def get(self, request, pk):
+        grievance = get_object_or_404(Complain, pk=pk)
+        initial_data = {
+            'username': grievance.username,
+            'student': grievance.student,
+            'complain': grievance.complain_type,
+            'complain_type': grievance.complain_type,
+            'subject': grievance.subject,
+            'description': grievance.description,
+            'status': grievance.status,
+        }
+        print(f"grievance.status: {grievance.status}")
+        form = UpdateGrievanceStatusForm(initial=initial_data)
+        return render(request, 'updategrievancestatus.html', {'form': form})
+
+    def post(self, request, pk):
+        grievance = get_object_or_404(Complain, pk=pk)
+        updateform = UpdateGrievanceStatusForm
+        form = updateform(request.POST)
+        if form.is_valid():
+            grievance.status = form.cleaned_data['update_status']
+            grievance.save()
+            return redirect('ShowAllGrivances')

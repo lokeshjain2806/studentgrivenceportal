@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Update Grievance {% endblock title %}
+
+{% block content %}
+<h1 style="text-align:center;margin-top:3%">Update Grievance Status</h1>
+
+<div class="container">
+    <form method="post">{% csrf_token %}
+        {{ form.as_p }}
+        <div class="text-center">
+                    <input type="submit" value="Submit" class="btn1">
+        </div>
+    </form>
+</div>
+{% endblock content %}

@@ -15,15 +15,20 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
-from . views import LoginPage, Dashboard, UserLogout, CreateGrievanceUserView, CreateStudent, AllShowUsers, DeleteUser, search, UpdateUserDetails, CreateGrievanceView, ShowStudents, SearchStudents, ShowTeachers, SearchTeachers, Student_Show_Grievance
+from .views import LoginPage, Dashboard, UserLogout, CreateGrievanceUserView, CreateStudent, AllShowUsers, DeleteUser, \
+    search, UpdateUserDetails, CreateGrievanceView, ShowStudents, SearchStudents, ShowTeachers, SearchTeachers, \
+    Student_Show_Grievance, ShowAllGrivances, UpdateGrivanceStatus, Home
 
 urlpatterns = [
     path('', Dashboard, name='Home'),
+    path('home/', Home, name='LoginHome'),
     path('login/', LoginPage.as_view(), name='LoginPage'),
     path('home/allusers/', AllShowUsers.as_view(), name='ShowUsers'),
     path('home/showstudents/', ShowStudents.as_view(), name='ShowStudents'),
     path('home/showteachers/', ShowTeachers, name='ShowTeachers'),
-    path('home/studentshowgrivances/<int:id>/', Student_Show_Grievance, name='StudentShowGrievance'),
+    path('home/studentshowgrivances/', Student_Show_Grievance, name='StudentShowGrievance'),
+    path('home/showallgrivances/', ShowAllGrivances.as_view(), name='ShowAllGrivances'),
+    path('home/updategrivance/<int:pk>/', UpdateGrivanceStatus.as_view(), name='UpdateGrivanceStatus'),
     path('home/search/', search, name='Search'),
     path('home/searchstudents/', SearchStudents, name='SearchStudents'),
     path('home/searchteachers/', SearchTeachers, name='SearchTeachers'),

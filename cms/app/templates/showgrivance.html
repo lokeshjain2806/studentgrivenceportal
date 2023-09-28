@@ -4,6 +4,37 @@
 {% block title %} Show Grivances {% endblock title %}
 
 {% block content %}
+<div class="container">
+{% if complains %}
+    <h1 style="text-align:center;">Complain List</h1>
+    <div class="table-responsive">
+    <table class="table table-bordered" style="text-align:center;">
+            <thead>
+                <tr>
+                    <th>Complain Type</th>
+                    <th>Subject</th>
+                    <th>Description</th>
+                    <th>Complain Generated Time</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in complains %}
+                <tr>
+                    <td>{{ i.complain_type|first|upper }}{{ i.complain_type|slice:"1:" }}</td>
+                    <td>{{ i.subject|first|upper }}{{ i.subject|slice:"1:" }}</td>
+                    <td>{{ i.description|first|upper }}{{ i.description|slice:"1:" }}</td>
+                    <td>{{ i.complain_date }}</td>
+                    <td>{{ i.status }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+<h1 style="text-align:center;margin-top: 35%;">No Complain Found</h1>
+{% endif %}
+</div>
 
 
 {% endblock content %}

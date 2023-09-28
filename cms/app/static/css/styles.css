@@ -18,6 +18,18 @@ img{
     background : white;
     border-width : 10px;
 }
+.navbar-nav .nav-item .nav-link .link-text {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s, background-color 0.3s;
+     padding: 10px 15px;
+}
+
+/* Hover effect for the text inside the navbar link */
+.navbar-nav .nav-item .nav-link:hover .link-text {
+    color: #007bff;
+    background: #333333;
+}
 .custom-btn-lg {
     width: 200px;
     height: 50px;
