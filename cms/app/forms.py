@@ -99,7 +99,7 @@ class CreateGrievanceForm(forms.Form):
 class UpdateGrievanceStatusForm(forms.ModelForm):
     username = forms.CharField(label='Username', widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     student = forms.CharField(label='Student Name', widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
-    complain = forms.CharField(label='Complain Type', widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    complain_type = forms.CharField(label='Complain Type', widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     subject = forms.CharField(label='Subject',
                                widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     description = forms.CharField(label='Description',
@@ -109,12 +109,4 @@ class UpdateGrievanceStatusForm(forms.ModelForm):
 
     class Meta:
         model = Complain
-        fields = ['username', 'student', 'complain', 'subject', 'description', 'status']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        instance = kwargs.get('instance')
-        if instance:
-            self.fields['status'].initial = instance.status
-
+        fields = ['username', 'student', 'complain_type', 'subject', 'description', 'status']

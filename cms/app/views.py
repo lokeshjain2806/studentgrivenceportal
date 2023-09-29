@@ -1,12 +1,13 @@
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils.decorators import method_decorator
 from django.views import View
-from django.views.generic import ListView, FormView
-
+from django.views.generic import ListView
 from .forms import GrievanceSignupform, LoginForm, StudentSignupform, CreateGrievanceForm, UpdateGrievanceStatusForm
 from .models import Student, Complain
 from django.contrib.auth.models import Permission
@@ -37,11 +38,15 @@ def Dashboard(request):
     return render(request, 'base.html')
 
 
+@login_required(login_url="/login/")
 def Home(request):
     return render(request, 'home.html')
 
 
-class CreateGrievanceUserView(View):
+@method_decorator(login_required(login_url="/login/"), name='dispatch')
+class CreateGrievanceUserView(PermissionRequiredMixin, View):
+    permission_required = "student.can_view_superuser"
+
     def get(self, request):
         form = GrievanceSignupform
         return render(request, 'creategrievanceuser.html', {'form': form})
@@ -65,7 +70,10 @@ class CreateGrievanceUserView(View):
             return render(request, 'creategrievanceuser.html', {'form': form})
 
 
-class CreateStudent(View):
+@method_decorator(login_required(login_url="/login/"), name='dispatch')
+class CreateStudent(PermissionRequiredMixin, View):
+    permission_required = "app.can_view_staff"
+
     def get(self, request):
         form = StudentSignupform
         return render(request, 'createstudentuser.html', {'form': form})
@@ -81,8 +89,6 @@ class CreateStudent(View):
                 first_name=form.cleaned_data['first_name'],
                 last_name=form.cleaned_data['last_name']
             )
-
-            # Now create a Student instance associated with the user
             student = Student(
                 username=user,
                 name=form.cleaned_data['first_name'] + ' ' + form.cleaned_data['last_name'],
@@ -99,25 +105,34 @@ class CreateStudent(View):
             return redirect('CreateStudent')
 
 
+@permission_required('student.can_view_superuser', raise_exception=True)
+@login_required(login_url="/login/")
 def search(request):
     query = request.GET.get('username')
     data = User.objects.filter(username__icontains=query)
     return render(request, 'searchallusers.html', {'data': data, 'query': query})
 
 
+@permission_required('student.can_view_staff', raise_exception=True)
+@login_required(login_url="/login/")
 def SearchStudents(request):
     query = request.GET.get('username')
     data = Student.objects.filter(username__username__icontains=query)
     return render(request, 'searchstudent.html', {'data': data, 'query': query})
 
 
+@permission_required('student.can_view_superuser', raise_exception=True)
+@login_required(login_url="/login/")
 def SearchTeachers(request):
     query = request.GET.get('username')
     data = User.objects.filter(Q(is_superuser=False) & Q(is_staff=True) & Q(username__icontains=query))
     return render(request, 'searchteachers.html', {'data': data, 'query': query})
 
 
-class AllShowUsers(View):
+@method_decorator(login_required(login_url="/login/"), name='dispatch')
+class AllShowUsers(PermissionRequiredMixin, View):
+    permission_required = 'student.can_view_superuser'
+
     def get(self, request):
         all_users = User.objects.filter(is_superuser=False)
         students = Student.objects.all()
@@ -128,17 +143,23 @@ class AllShowUsers(View):
                                                      'grievanceform': grievanceform})
 
 
-class ShowStudents(View):
+@method_decorator(login_required(login_url="/login/"), name='dispatch')
+class ShowStudents(PermissionRequiredMixin, View):
+    permission_required = "app.can_view_staff"
+
     def get(self, request):
         students = Student.objects.all()
         return render(request, 'showallstudents.html', {'students': students})
 
 
+@permission_required('student.can_view_superuser', raise_exception=True)
+@login_required(login_url="/login/")
 def ShowTeachers(request):
     data = User.objects.filter(Q(is_superuser=False) & Q(is_staff=True))
     return render(request, 'showallteachers.html', {'data': data})
 
 
+@method_decorator(login_required(login_url="/login/"), name='dispatch')
 class UpdateUserDetails(View):
     def get(self, request, pk):
         user = get_object_or_404(User, pk=pk)
@@ -168,10 +189,7 @@ class UpdateUserDetails(View):
                 last_name = form.cleaned_data['last_name']
 
                 try:
-                    # Check if a Student with the same username already exists
                     student = Student.objects.get(username=user)
-
-                    # Update the existing Student object
                     student.name = f"{first_name} {last_name}"
                     student.roll_number = form.cleaned_data['roll_number']
                     student.School = form.cleaned_data['school']
@@ -180,7 +198,6 @@ class UpdateUserDetails(View):
                     student.email_id = email
                     student.save()
 
-                    # Update the associated User object
                     user.set_password(password)
                     user.email = email
                     user.first_name = first_name
@@ -216,18 +233,25 @@ class UpdateUserDetails(View):
         return HttpResponse("Form submission failed or encountered an error")
 
 
+@permission_required("can_view_superuser", raise_exception=True)
+@permission_required("can_view_staff", raise_exception=True)
+@login_required(login_url="/login/")
 def DeleteUser(request, pk):
     user = User.objects.get(pk=pk).delete()
     return redirect('ShowUsers')
 
 
+@method_decorator(login_required(login_url="/login/"), name='dispatch')
 class UserLogout(View):
     def get(self, request):
         logout(request)
         return redirect('LoginPage')
 
 
-class CreateGrievanceView(View):
+@method_decorator(login_required(login_url="/login/"), name='dispatch')
+class CreateGrievanceView(PermissionRequiredMixin, View):
+    permission_required = "student.can_view_superuser"
+
     def get(self,request):
         form = CreateGrievanceForm
         return render(request, 'creategrievance.html', {'form': form})
@@ -246,6 +270,7 @@ class CreateGrievanceView(View):
             return redirect("Home")
 
 
+@login_required(login_url="/login/")
 def Student_Show_Grievance(request):
     if request.user.is_authenticated:
         user = request.user.id
@@ -256,7 +281,9 @@ def Student_Show_Grievance(request):
             return HttpResponse("You have no complaints.")
 
 
-class ShowAllGrivances(ListView):
+@method_decorator(login_required(login_url="/login/"), name='dispatch')
+class ShowAllGrivances(PermissionRequiredMixin, ListView):
+    permission_required = "app.can_view_staff"
     template_name = 'showallgrivances.html'
     context_object_name = 'grivances'
 
@@ -265,28 +292,36 @@ class ShowAllGrivances(ListView):
         return queryset
 
 
-class UpdateGrivanceStatus(View):
+@method_decorator(login_required(login_url="/login/"), name='dispatch')
+class UpdateGrivanceStatus(PermissionRequiredMixin, View):
+    permission_required = "app.can_view_staff"
+    try:
+        def get(self, request, pk):
+            grievance = get_object_or_404(Complain, pk=pk)
+            initial_data = {
+                'username': grievance.username,
+                'student': grievance.student,
+                'complain': grievance.complain_type,
+                'complain_type': grievance.complain_type,
+                'subject': grievance.subject,
+                'description': grievance.description,
+                'status': grievance.status,
+            }
+            form = UpdateGrievanceStatusForm(initial=initial_data)
+            return render(request, 'updategrievancestatus.html', {'form': form})
 
-    def get(self, request, pk):
-        grievance = get_object_or_404(Complain, pk=pk)
-        initial_data = {
-            'username': grievance.username,
-            'student': grievance.student,
-            'complain': grievance.complain_type,
-            'complain_type': grievance.complain_type,
-            'subject': grievance.subject,
-            'description': grievance.description,
-            'status': grievance.status,
-        }
-        print(f"grievance.status: {grievance.status}")
-        form = UpdateGrievanceStatusForm(initial=initial_data)
-        return render(request, 'updategrievancestatus.html', {'form': form})
-
-    def post(self, request, pk):
-        grievance = get_object_or_404(Complain, pk=pk)
-        updateform = UpdateGrievanceStatusForm
-        form = updateform(request.POST)
-        if form.is_valid():
-            grievance.status = form.cleaned_data['update_status']
-            grievance.save()
-            return redirect('ShowAllGrivances')
+        def post(self, request, pk):
+            grievance = get_object_or_404(Complain, pk=pk)
+            form = UpdateGrievanceStatusForm(request.POST, instance=grievance.username)
+            if form.is_valid():
+                complain = Complain.objects.update(
+                    username=grievance.username,
+                    student=grievance.student,
+                    complain_type=grievance.complain_type,
+                    subject=grievance.subject,
+                    description=grievance.description,
+                    status=form.cleaned_data['status'],
+                )
+                return redirect('ShowAllGrivances')
+    except Exception as e:
+        pass
