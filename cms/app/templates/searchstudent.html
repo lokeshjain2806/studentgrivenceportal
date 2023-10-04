@@ -5,7 +5,7 @@
 
 {% block content %}
 
-<div class="container">
+<div class="container mt-5">
 {% if data %}
     <h1 style="text-align:center;">Students List</h1>
     <div class="table-responsive">
@@ -37,7 +37,7 @@
                         <td><a href="{% url 'updateuserdetails' i.pk %}"><button type="button" class="btn btn-primary custom-btn-lg"
                                                 data-target="#updatedetails{{ i.id }}"
                                 data-toggle="modal">Update User Details</button></a>
-                        <td><a href="{% url 'DeleteUsers' i.pk %}"><button type="button"
+                        <td><a href="{% url 'DeleteStudentUser' i.pk %}"><button type="button"
                                                                               class="btn btn-danger custom-btn-lg">Delete
                         User</button></a></td>
                     </tr>

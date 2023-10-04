@@ -1,9 +1,11 @@
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
 from django.db.models import Q
-from django.http import HttpResponse
+from django.urls import reverse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -31,11 +33,15 @@ class LoginPage(View):
                 login(request, user)  # Log the user in
                 return redirect('LoginHome')  # Redirect to the home page upon successful login
             else:
+                messages.error(request,'username or password not correct')
                 return redirect('LoginPage')
 
 
 def Dashboard(request):
-    return render(request, 'base.html')
+    if not request.user.is_authenticated:
+        return render(request, 'base.html')
+    else:
+        return redirect('LoginHome')
 
 
 @login_required(login_url="/login/")
@@ -54,9 +60,16 @@ class CreateGrievanceUserView(PermissionRequiredMixin, View):
     def post(self, request):
         form = GrievanceSignupform(request.POST)
         if form.is_valid():
+            username = form.cleaned_data['username']
+            print(username, 'username')
+            password1 = form.cleaned_data['password1']
+            password2 = form.cleaned_data['password2']
+            if password1 != password2:
+                error_message = "Please Enter Same Password"
+                return render(request, 'creategrievanceuser.html', {'form': form, 'error_message': error_message})
             user = User.objects.create_user(
                 username=form.cleaned_data['username'],
-                password=form.cleaned_data['password1'],
+                password=password1,
                 email=form.cleaned_data['email'],
                 first_name=form.cleaned_data['first_name'],
                 last_name=form.cleaned_data['last_name'],
@@ -64,9 +77,10 @@ class CreateGrievanceUserView(PermissionRequiredMixin, View):
             )
             permission = Permission.objects.get(codename='can_view_staff')
             user.user_permissions.add(permission)
-            return redirect('Home')
+            return redirect('ShowTeachers')
         else:
             form = GrievanceSignupform
+            messages.error(request, 'user is already Exist')
             return render(request, 'creategrievanceuser.html', {'form': form})
 
 
@@ -81,25 +95,37 @@ class CreateStudent(PermissionRequiredMixin, View):
     def post(self, request):
         form = StudentSignupform(request.POST)
         if form.is_valid():
-            # Create a new User instance
-            user = User.objects.create_user(
-                username=form.cleaned_data['user_username'],
-                password=form.cleaned_data['password1'],
-                email=form.cleaned_data['email'],
-                first_name=form.cleaned_data['first_name'],
-                last_name=form.cleaned_data['last_name']
-            )
-            student = Student(
-                username=user,
-                name=form.cleaned_data['first_name'] + ' ' + form.cleaned_data['last_name'],
-                roll_number=form.cleaned_data['roll_number'],
-                School=form.cleaned_data['school'],
-                Branch=form.cleaned_data['branch'],
-                contact_number=form.cleaned_data['contact_number'],
-                email_id=form.cleaned_data['email']
-            )
-            student.save()
-            return redirect('Home')
+            user_name = form.cleaned_data['user_username']
+            a = User.objects.filter(username=user_name).exists()
+            if a:
+                messages.error(request, 'username is already exist')
+                return render(request, 'createstudentuser.html', {'form': form})
+            else:
+                password1 = form.cleaned_data['password1']
+                password2 = form.cleaned_data['password2']
+                if password1 != password2:
+                    error_message = "Please Enter Same Password"
+                    return render(request, 'createstudentuser.html', {'form': form, 'error_message': error_message})
+                # Create a new User instance
+                user = User.objects.create_user(
+                    username=form.cleaned_data['user_username'],
+                    password=password1,
+                    email=form.cleaned_data['email'],
+                    first_name=form.cleaned_data['first_name'],
+                    last_name=form.cleaned_data['last_name']
+                )
+                student = Student(
+                    username=user,
+                    name=form.cleaned_data['first_name'] + ' ' + form.cleaned_data['last_name'],
+                    roll_number=form.cleaned_data['roll_number'],
+                    School=form.cleaned_data['school'],
+                    Branch=form.cleaned_data['branch'],
+                    contact_number=form.cleaned_data['contact_number'],
+                    email_id=form.cleaned_data['email']
+                )
+                student.save()
+                return redirect('ShowStudents')
+            return HttpResponseRedirect(reverse('CreateStudent'))
         else:
             form = StudentSignupform
             return redirect('CreateStudent')
@@ -110,8 +136,8 @@ class CreateStudent(PermissionRequiredMixin, View):
 def search(request):
     query = request.GET.get('username')
     data = User.objects.filter(username__icontains=query)
-    return render(request, 'searchallusers.html', {'data': data, 'query': query})
-
+    a = data.exclude(is_superuser=True)
+    return render(request, 'searchallusers.html', {'data': a, 'query': query})
 
 @permission_required('student.can_view_staff', raise_exception=True)
 @login_required(login_url="/login/")
@@ -134,12 +160,10 @@ class AllShowUsers(PermissionRequiredMixin, View):
     permission_required = 'student.can_view_superuser'
 
     def get(self, request):
-        all_users = User.objects.filter(is_superuser=False)
-        students = Student.objects.all()
+        all_users = User.objects.filter(is_superuser=False).order_by('-pk')
         grievanceform = GrievanceSignupform
         return render(request, 'showallusers.html', {
                                                      'users': all_users,
-                                                     'students': students,
                                                      'grievanceform': grievanceform})
 
 
@@ -148,14 +172,14 @@ class ShowStudents(PermissionRequiredMixin, View):
     permission_required = "app.can_view_staff"
 
     def get(self, request):
-        students = Student.objects.all()
+        students = Student.objects.all().order_by('-pk')
         return render(request, 'showallstudents.html', {'students': students})
 
 
 @permission_required('student.can_view_superuser', raise_exception=True)
 @login_required(login_url="/login/")
 def ShowTeachers(request):
-    data = User.objects.filter(Q(is_superuser=False) & Q(is_staff=True))
+    data = User.objects.filter(Q(is_superuser=False) & Q(is_staff=True)).order_by('-id')
     return render(request, 'showallteachers.html', {'data': data})
 
 
@@ -177,11 +201,25 @@ class UpdateUserDetails(View):
         if user.is_staff:
             form = GrievanceSignupform(request.POST, instance=user)
             if form.is_valid():
+                password1 = form.cleaned_data['password1']
+                password2 = form.cleaned_data['password2']
+                if password1 != password2:
+                    messages.error(request,'Password Do Not Match')
+                    return render(request, 'updatedetails.html', {'form': form, 'id': pk})
+                user.set_password(password1)
                 form.save()
                 return redirect('Home')
+            else:
+                messages.error(request, 'Password Is Not Match')
+                return render(request, 'updatedetails.html', {'form': form, 'id': pk})
         elif not user.is_staff:
             form = StudentSignupform(request.POST)
             if form.is_valid():
+                password1 = form.cleaned_data['password1']
+                password2 = form.cleaned_data['password2']
+                if password1 != password2:
+                    messages.error(request, 'Password Do Not Match')
+                    return render(request, 'updatedetails.html', {'form': form, 'id': pk})
                 username = form.cleaned_data['user_username']
                 password = form.cleaned_data['password1']
                 email = form.cleaned_data['email']
@@ -236,10 +274,17 @@ class UpdateUserDetails(View):
 @permission_required("can_view_superuser", raise_exception=True)
 @permission_required("can_view_staff", raise_exception=True)
 @login_required(login_url="/login/")
-def DeleteUser(request, pk):
+def DeleteAllUser(request, pk):
     user = User.objects.get(pk=pk).delete()
     return redirect('ShowUsers')
 
+def DeleteTeachersUser(request, pk):
+    user = User.objects.get(pk=pk).delete()
+    return redirect('ShowUsers')
+
+def DeleteStudentUser(request, pk):
+    user = User.objects.get(pk=pk).delete()
+    return redirect('ShowUsers')
 
 @method_decorator(login_required(login_url="/login/"), name='dispatch')
 class UserLogout(View):
@@ -249,8 +294,7 @@ class UserLogout(View):
 
 
 @method_decorator(login_required(login_url="/login/"), name='dispatch')
-class CreateGrievanceView(PermissionRequiredMixin, View):
-    permission_required = "student.can_view_superuser"
+class CreateGrievanceView(View):
 
     def get(self,request):
         form = CreateGrievanceForm
@@ -267,14 +311,14 @@ class CreateGrievanceView(PermissionRequiredMixin, View):
                 subject=form.cleaned_data['subject'],
                 description=form.cleaned_data['description'],
             )
-            return redirect("Home")
+            return redirect("StudentShowGrievance")
 
 
 @login_required(login_url="/login/")
 def Student_Show_Grievance(request):
     if request.user.is_authenticated:
         user = request.user.id
-        complain = Complain.objects.filter(student=user)
+        complain = Complain.objects.filter(student=user).order_by('-pk')
         if complain:
             return render(request, 'showgrivance.html', {'complains': complain})
         else:
@@ -288,7 +332,7 @@ class ShowAllGrivances(PermissionRequiredMixin, ListView):
     context_object_name = 'grivances'
 
     def get_queryset(self):
-        queryset = Complain.objects.all()
+        queryset = Complain.objects.all().order_by('-complain_date')
         return queryset
 
 
@@ -314,14 +358,42 @@ class UpdateGrivanceStatus(PermissionRequiredMixin, View):
             grievance = get_object_or_404(Complain, pk=pk)
             form = UpdateGrievanceStatusForm(request.POST, instance=grievance.username)
             if form.is_valid():
-                complain = Complain.objects.update(
-                    username=grievance.username,
-                    student=grievance.student,
-                    complain_type=grievance.complain_type,
-                    subject=grievance.subject,
-                    description=grievance.description,
-                    status=form.cleaned_data['status'],
-                )
+                grievance.username = grievance.username
+                grievance.student = grievance.student
+                grievance.complain_type = grievance.complain_type
+                grievance.subject = grievance.subject
+                grievance.description = grievance.description
+                grievance.status = form.cleaned_data['status']
+                grievance.save()
                 return redirect('ShowAllGrivances')
     except Exception as e:
         pass
+
+@permission_required("can_view_superuser", raise_exception=True)
+def analytics_view(request):
+    complaint_counts = {}
+    complaint_types = []
+    complaint_percentages = []  # Store percentages instead of values
+
+    # Calculate the total number of complaints
+    total_complaints = Complain.objects.count()
+
+    # Loop through each complaint type
+    for complaint_type, _ in Complain.COMPLAIN_CATEGORY:
+        try:
+        # Count the number of complaints for the current type
+            count = Complain.objects.filter(complain_type=complaint_type).count()
+            # Calculate the percentage
+            percentage = (count / total_complaints) * 100
+            # Store the percentage in the list
+            complaint_percentages.append(percentage)
+            complaint_types.append(complaint_type)
+        except:
+            return HttpResponse('No Complains')
+
+    context = {
+        'complaint_types': complaint_types,
+        'complaint_percentages': complaint_percentages,
+    }
+
+    return render(request, 'analytics.html', context)

@@ -15,14 +15,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
-from .views import LoginPage, Dashboard, UserLogout, CreateGrievanceUserView, CreateStudent, AllShowUsers, DeleteUser, \
+from .views import LoginPage, Dashboard, UserLogout, CreateGrievanceUserView, CreateStudent, AllShowUsers, DeleteAllUser, \
     search, UpdateUserDetails, CreateGrievanceView, ShowStudents, SearchStudents, ShowTeachers, SearchTeachers, \
-    Student_Show_Grievance, ShowAllGrivances, UpdateGrivanceStatus, Home
+    Student_Show_Grievance, ShowAllGrivances, UpdateGrivanceStatus, Home, analytics_view, DeleteTeachersUser, DeleteStudentUser
 
 urlpatterns = [
     path('', Dashboard, name='Home'),
     path('home/', Home, name='LoginHome'),
     path('login/', LoginPage.as_view(), name='LoginPage'),
+    path('analytics/', analytics_view, name='Analytics'),
     path('home/allusers/', AllShowUsers.as_view(), name='ShowUsers'),
     path('home/showstudents/', ShowStudents.as_view(), name='ShowStudents'),
     path('home/showteachers/', ShowTeachers, name='ShowTeachers'),
@@ -32,12 +33,15 @@ urlpatterns = [
     path('home/search/', search, name='Search'),
     path('home/searchstudents/', SearchStudents, name='SearchStudents'),
     path('home/searchteachers/', SearchTeachers, name='SearchTeachers'),
-    # path('home/allusers/userdetails/<int:pk>', UserDetails.as_view(), name='UserDetails'),
     path('home/updateuserdetails/<int:pk>/', UpdateUserDetails.as_view(), name='updateuserdetails'),
-    path('home/deleteuser/<int:pk>/', DeleteUser, name='DeleteUsers'),
+    path('home/deleteuser/<int:pk>/', DeleteAllUser, name='DeleteAllUsers'),
+    path('home/deleteteacheruser/<int:pk>/', DeleteTeachersUser, name='DeleteTeachersUser'),
+    path('home/deletestudentuser/<int:pk>/', DeleteStudentUser, name='DeleteStudentUser'),
     path('home/creategrievanceview/', CreateGrievanceView.as_view(), name='CreateGrievance'),
     path('home/createstudentview/', CreateStudent.as_view(), name='CreateStudent'),
     path('home/creategrievanceuser/', CreateGrievanceUserView.as_view(), name='CreateGrievanceUser'),
     path('logout/', UserLogout.as_view(), name='Logout'),
 
 ]
+
+

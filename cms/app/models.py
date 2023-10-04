@@ -325,7 +325,7 @@ class Complain(models.Model):
     STATUS_CHOICES = (
         ('Pending', 'Pending'),
         ('In Process', 'In Process'),
-        ('Success', 'Success'),
+        ('Resolved', 'Resolved'),
     )
     username = models.ForeignKey(User, on_delete=models.CASCADE)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)

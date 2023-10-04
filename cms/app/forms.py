@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UsernameField
+from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
 from django.utils.translation import gettext, gettext_lazy as _
 from django import forms
@@ -46,6 +46,15 @@ class GrievanceSignupform(forms.ModelForm):
             user.save()
         return user
 
+    # def check_user(self):
+    #     username = self.cleaned_data['username']
+    #     print(username, 'usrnam')
+
+phone_regex = RegexValidator(
+    regex=r'^\d{10}$',
+    message="Phone number must be 10 digits without spaces or special characters.",
+)
+
 
 class StudentSignupform(forms.ModelForm):
     user_username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -54,7 +63,7 @@ class StudentSignupform(forms.ModelForm):
     roll_number = forms.IntegerField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     school = forms.ChoiceField(label='School', choices=Student.SCHOOL_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
     branch = forms.ChoiceField(label='Branch', choices=Student.COURSE_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
-    contact_number = forms.IntegerField(label='Contact Number', widget=forms.TextInput(attrs={'class': 'form-control'}))
+    contact_number = forms.IntegerField(label='Contact Number', widget=forms.TextInput(attrs={'class': 'form-control'}), validators=[phone_regex])
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
     password2 = forms.CharField(label='ReEnter Password', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
@@ -67,7 +76,6 @@ class StudentSignupform(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         instance = kwargs.get('instance')
-        print(instance, 'insytance')
         if instance:
             self.fields['user_username'].initial = instance.username
             self.fields['first_name'].initial = instance.username.first_name
@@ -76,7 +84,25 @@ class StudentSignupform(forms.ModelForm):
             self.fields['school'].initial = instance.School
             self.fields['branch'].initial = instance.Branch
 
+    # def clean_user_username(self):
+    #     user_username = self.cleaned_data.get('user_username')
+    #     if not user_username:
+    #         raise forms.ValidationError("Username field cannot be empty.")
+    #     return user_username
+    #
+    # def clean_first_name(self):
+    #     first_name = self.cleaned_data.get('first_name')
+    #     if not first_name:
+    #         raise forms.ValidationError("First Name field cannot be empty.")
+    #     return first_name
+    #
+    # def clean_last_name(self):
+    #     last_name = self.cleaned_data.get('last_name')
+    #     if not last_name:
+    #         raise forms.ValidationError("Last Name field cannot be empty.")
+    #     return last_name
 
+from django.contrib.auth import authenticate
 class LoginForm(forms.Form):
     username = forms.CharField(widget=forms.TextInput(attrs={'autofocus': True, 'class': 'form-control'}))
     password = forms.CharField(label=_("Password"), strip=False, widget=forms.PasswordInput(attrs={'autocomplete': 'current-password', 'class': 'form-control my3'}))
@@ -84,6 +110,7 @@ class LoginForm(forms.Form):
     class Meta:
         model = User
         fields = ['username', 'password']
+
 
 
 class CreateGrievanceForm(forms.Form):

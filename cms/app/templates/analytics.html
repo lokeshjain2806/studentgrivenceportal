@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Analytics {% endblock title %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 style="text-align:center;">Complaint Analytics (Percentage)</h1>
+
+    <div style="width: 70%; margin: 20px auto;" class="mt-5">
+        <canvas id="complaintChart" width="400" height="200"></canvas>
+    </div>
+</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    // Get the complaint_types and complaint_percentages from the Django context
+    var complaintTypes = {{ complaint_types|safe }};
+    var complaintPercentages = {{ complaint_percentages|safe }};
+
+    // Create a bar chart
+    var ctx = document.getElementById('complaintChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: complaintTypes,
+            datasets: [{
+                label: 'Complaint Percentage',
+                data: complaintPercentages,
+                backgroundColor: '#FFFF00', // Bar color
+                borderColor: 'black', // Border color
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100, // Set the maximum value to 100
+                    ticks: {
+                        stepSize: 10, // Define tick intervals
+                    }
+                },
+                x: {  // x-axis configuration
+                    ticks: {
+                        fontColor: 'black', // Set the font color for x-axis labels (complaint types)
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    labels: {
+                        fontColor: 'black', // Set the font color for legend labels
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+{% endblock content %}
