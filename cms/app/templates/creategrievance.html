@@ -6,7 +6,7 @@
 
 {% block content %}
 <div class="container mt-5">
-    <form action="" method="POST" class="shadow p-5">{% csrf_token %}
+    <form action="" method="POST" class="shadow-lg p-5 mb-5 bg-body rounded">{% csrf_token %}
                 {{form|crispy}}
                     <div class="text-center">
                         <input class="btn btn-primary" type="submit" value="Submit">

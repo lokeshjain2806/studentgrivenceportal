@@ -3,8 +3,10 @@
 
 {% block title %}Home Page {% endblock title %}
 {% block content %}
-<div class="container mt-5">
-    <h1>Welcome {{request.user}}</h1>
+<div class="container shadow-lg p-5 mt-5 bg-body rounded">
+    <marquee direction="left" scrollamount="3">
+        <h2 class="text-danger">Welcome {{user.first_name}} {{user.last_name}}</h2>
+    </marquee>
 </div>
 
 {% endblock content %}

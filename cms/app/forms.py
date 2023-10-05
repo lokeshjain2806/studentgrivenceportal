@@ -50,10 +50,10 @@ class GrievanceSignupform(forms.ModelForm):
     #     username = self.cleaned_data['username']
     #     print(username, 'usrnam')
 
-phone_regex = RegexValidator(
-    regex=r'^\d{10}$',
-    message="Phone number must be 10 digits without spaces or special characters.",
-)
+# phone_regex = RegexValidator(
+#     regex=r'^\d{10}$',
+#     message="Phone number must be 10 digits without spaces or special characters.",
+# )
 
 
 class StudentSignupform(forms.ModelForm):
@@ -63,7 +63,7 @@ class StudentSignupform(forms.ModelForm):
     roll_number = forms.IntegerField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     school = forms.ChoiceField(label='School', choices=Student.SCHOOL_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
     branch = forms.ChoiceField(label='Branch', choices=Student.COURSE_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
-    contact_number = forms.IntegerField(label='Contact Number', widget=forms.TextInput(attrs={'class': 'form-control'}), validators=[phone_regex])
+    contact_number = forms.IntegerField(label='Contact Number', widget=forms.TextInput(attrs={'class': 'form-control'}))
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
     password2 = forms.CharField(label='ReEnter Password', widget=forms.PasswordInput(attrs={'class': 'form-control'}))

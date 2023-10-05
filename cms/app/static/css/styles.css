@@ -56,6 +56,10 @@ img{
     white-space: nowrap;
     overflow: hidden;
 }
+.custom-col {
+            width: 540px; /* Set the desired width */
+            height: 362px; /* Set the desired height */
+        }
 /*
 .popup {
     display: none;
@@ -86,6 +90,10 @@ img{
 }
 */
 
+li::marker{
+color:red;
+}
+
 /* Media query for responsiveness */
 @media (max-width: 768px) {
     /* Adjust button size for smaller screens if needed */
@@ -95,13 +103,38 @@ img{
         padding: 8px 16px;
     }
 }
+.marquee-container {
+    width: 100%;
+    max-width: 90vh; /* Adjust the maximum width as needed */
+    max-height: 300px; /* Adjust the maximum height to control text wrapping */
+    overflow: hidden;
+}
 
-@media (max-width: 768px) {
-  .name-logout {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-around;
-    gap: 10px;
-  }
+.custom-col {
+    width: 100%;
+    padding: 10px;
+}
+
+.custom-col ul {
+    margin: 0;
+    padding: 0;
+    list-style: disc inside; /* Show bullets inside the container */
+    columns: 1; /* Create a single column layout */
+}
+
+/* Adjust the marquee styles as needed */
+.marquee-container marquee {
+    width: 100%;
+}
+
+@media screen and (max-width: 600px) {
+    /* Add responsive styles for smaller screens */
+    .marquee-container {
+        max-width: none; /* Remove the maximum width for smaller screens */
+    }
+}
+
+footer {
+    height: 7%;
+  background:rgba(255, 255, 255, 0.4);
 }

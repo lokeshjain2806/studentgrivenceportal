@@ -4,7 +4,7 @@
 {% block title %} Analytics {% endblock title %}
 
 {% block content %}
-<div class="container mt-5">
+<div class="container shadow-lg p-5 mt-5 bg-body rounded">
     <h1 style="text-align:center;">Complaint Analytics (Percentage)</h1>
 
     <div style="width: 70%; margin: 20px auto;" class="mt-5">
@@ -14,7 +14,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-    // Get the complaint_types and complaint_percentages from the Django context
     var complaintTypes = {{ complaint_types|safe }};
     var complaintPercentages = {{ complaint_percentages|safe }};
 

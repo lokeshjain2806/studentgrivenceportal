@@ -21,7 +21,7 @@ class LoginPage(View):
             return redirect('Home')
         else:
             form = LoginForm()
-            return render(request, 'login.html', {'form': form})
+            return render(request, 'base.html', {'form': form})
 
     def post(self, request):
         form = LoginForm(request.POST)
@@ -33,23 +33,24 @@ class LoginPage(View):
                 login(request, user)  # Log the user in
                 return redirect('LoginHome')  # Redirect to the home page upon successful login
             else:
-                messages.error(request,'username or password not correct')
-                return redirect('LoginPage')
+                messages.error(request,'Username Or Password Are Not Correct')
+                return redirect('Home')
 
 
-def Dashboard(request):
-    if not request.user.is_authenticated:
-        return render(request, 'base.html')
-    else:
-        return redirect('LoginHome')
+# def Dashboard(request):
+#     if not request.user.is_authenticated:
+#         form = LoginForm()
+#         return render(request, 'base.html', {'form': form})
+#     else:
+#         return redirect('LoginHome')
 
 
-@login_required(login_url="/login/")
+@login_required(login_url="/")
 def Home(request):
     return render(request, 'home.html')
 
 
-@method_decorator(login_required(login_url="/login/"), name='dispatch')
+@method_decorator(login_required(login_url="/"), name='dispatch')
 class CreateGrievanceUserView(PermissionRequiredMixin, View):
     permission_required = "student.can_view_superuser"
 
@@ -84,7 +85,7 @@ class CreateGrievanceUserView(PermissionRequiredMixin, View):
             return render(request, 'creategrievanceuser.html', {'form': form})
 
 
-@method_decorator(login_required(login_url="/login/"), name='dispatch')
+@method_decorator(login_required(login_url="/"), name='dispatch')
 class CreateStudent(PermissionRequiredMixin, View):
     permission_required = "app.can_view_staff"
 
@@ -132,7 +133,7 @@ class CreateStudent(PermissionRequiredMixin, View):
 
 
 @permission_required('student.can_view_superuser', raise_exception=True)
-@login_required(login_url="/login/")
+@login_required(login_url="/")
 def search(request):
     query = request.GET.get('username')
     data = User.objects.filter(username__icontains=query)
@@ -140,7 +141,7 @@ def search(request):
     return render(request, 'searchallusers.html', {'data': a, 'query': query})
 
 @permission_required('student.can_view_staff', raise_exception=True)
-@login_required(login_url="/login/")
+@login_required(login_url="/")
 def SearchStudents(request):
     query = request.GET.get('username')
     data = Student.objects.filter(username__username__icontains=query)
@@ -148,14 +149,14 @@ def SearchStudents(request):
 
 
 @permission_required('student.can_view_superuser', raise_exception=True)
-@login_required(login_url="/login/")
+@login_required(login_url="/")
 def SearchTeachers(request):
     query = request.GET.get('username')
     data = User.objects.filter(Q(is_superuser=False) & Q(is_staff=True) & Q(username__icontains=query))
     return render(request, 'searchteachers.html', {'data': data, 'query': query})
 
 
-@method_decorator(login_required(login_url="/login/"), name='dispatch')
+@method_decorator(login_required(login_url="/"), name='dispatch')
 class AllShowUsers(PermissionRequiredMixin, View):
     permission_required = 'student.can_view_superuser'
 
@@ -167,7 +168,7 @@ class AllShowUsers(PermissionRequiredMixin, View):
                                                      'grievanceform': grievanceform})
 
 
-@method_decorator(login_required(login_url="/login/"), name='dispatch')
+@method_decorator(login_required(login_url="/"), name='dispatch')
 class ShowStudents(PermissionRequiredMixin, View):
     permission_required = "app.can_view_staff"
 
@@ -177,17 +178,19 @@ class ShowStudents(PermissionRequiredMixin, View):
 
 
 @permission_required('student.can_view_superuser', raise_exception=True)
-@login_required(login_url="/login/")
+@login_required(login_url="/")
 def ShowTeachers(request):
     data = User.objects.filter(Q(is_superuser=False) & Q(is_staff=True)).order_by('-id')
     return render(request, 'showallteachers.html', {'data': data})
 
 
-@method_decorator(login_required(login_url="/login/"), name='dispatch')
+@method_decorator(login_required(login_url="/"), name='dispatch')
 class UpdateUserDetails(View):
     def get(self, request, pk):
         user = get_object_or_404(User, pk=pk)
+        print( user,'user')
         if user.is_staff:
+            print('its inside')
             form = GrievanceSignupform(instance=user)
             form.fields['username'].widget.attrs['readonly'] = 'readonly'
         else:
@@ -198,9 +201,11 @@ class UpdateUserDetails(View):
 
     def post(self, request, pk):
         user = get_object_or_404(User, pk=pk)
+        print(user, 'user12')
         if user.is_staff:
             form = GrievanceSignupform(request.POST, instance=user)
             if form.is_valid():
+                print('its inside')
                 password1 = form.cleaned_data['password1']
                 password2 = form.cleaned_data['password2']
                 if password1 != password2:
@@ -242,7 +247,7 @@ class UpdateUserDetails(View):
                     user.last_name = last_name
                     user.save()
 
-                    return redirect('Home')
+                    return HttpResponseRedirect(reverse('Home'))
                 except Student.DoesNotExist:
                     # If Student doesn't exist, create a new one
                     student = Student.objects.create(
@@ -273,7 +278,7 @@ class UpdateUserDetails(View):
 
 @permission_required("can_view_superuser", raise_exception=True)
 @permission_required("can_view_staff", raise_exception=True)
-@login_required(login_url="/login/")
+@login_required(login_url="/")
 def DeleteAllUser(request, pk):
     user = User.objects.get(pk=pk).delete()
     return redirect('ShowUsers')
@@ -286,14 +291,14 @@ def DeleteStudentUser(request, pk):
     user = User.objects.get(pk=pk).delete()
     return redirect('ShowUsers')
 
-@method_decorator(login_required(login_url="/login/"), name='dispatch')
+@method_decorator(login_required(login_url="/"), name='dispatch')
 class UserLogout(View):
     def get(self, request):
         logout(request)
-        return redirect('LoginPage')
+        return redirect('Home')
 
 
-@method_decorator(login_required(login_url="/login/"), name='dispatch')
+@method_decorator(login_required(login_url="/"), name='dispatch')
 class CreateGrievanceView(View):
 
     def get(self,request):
@@ -314,7 +319,7 @@ class CreateGrievanceView(View):
             return redirect("StudentShowGrievance")
 
 
-@login_required(login_url="/login/")
+@login_required(login_url="/")
 def Student_Show_Grievance(request):
     if request.user.is_authenticated:
         user = request.user.id
@@ -325,7 +330,7 @@ def Student_Show_Grievance(request):
             return HttpResponse("You have no complaints.")
 
 
-@method_decorator(login_required(login_url="/login/"), name='dispatch')
+@method_decorator(login_required(login_url="/"), name='dispatch')
 class ShowAllGrivances(PermissionRequiredMixin, ListView):
     permission_required = "app.can_view_staff"
     template_name = 'showallgrivances.html'
@@ -336,7 +341,7 @@ class ShowAllGrivances(PermissionRequiredMixin, ListView):
         return queryset
 
 
-@method_decorator(login_required(login_url="/login/"), name='dispatch')
+@method_decorator(login_required(login_url="/"), name='dispatch')
 class UpdateGrivanceStatus(PermissionRequiredMixin, View):
     permission_required = "app.can_view_staff"
     try:

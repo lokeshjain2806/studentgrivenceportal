@@ -5,8 +5,8 @@
 {% block title %}Update Details{% endblock title %}
 
 {% block content %}
-<div class="container mt-5">
-    <form action="" method="POST" novalidate class="shadow p-5" id="signup-form">{% csrf_token %}
+<div class="container mt-5 shadow-lg p-5 mb-5 bg-body rounded">
+    <form action="" method="POST" id="signup-form">{% csrf_token %}
                 {{form|crispy}}
                     <div class="text-center">
                         <input class="btn btn-primary" type="submit" value="Submit">

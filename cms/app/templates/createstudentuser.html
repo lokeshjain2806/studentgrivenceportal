@@ -5,7 +5,7 @@
 {% block title %}Create Student User{% endblock title %}
 {% block content %}
 <div class="container">
-<form action="" method="POST" class="shadow p-3"  id="signup-form">{% csrf_token %}
+<form action="" method="POST" class="shadow-lg p-5 mb-5 bg-body rounded"  id="signup-form">{% csrf_token %}
     <div id="popup-user-message" class="popup-message">
         {% if messages %}
             <ul class="messages text-danger">

@@ -1,46 +1,86 @@
 <!DOCTYPE html>
 {% load static %}
+{%load crispy_forms_tags %}
+
 <html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Home Page {% endblock title %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/boot.css' %}">
+    <style>
+            .bg-image {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        background-image: url('{% static 'images/krmu.jpg' %}');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+        }
+
+        .bg-image::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: inherit;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+            opacity: 0.5;
+            z-index: -1;
+        }
+        .login{
+            margin-top:17%;
+        }
+        @media screen and (max-width: 600px) {
+            .login {
+                margin-top: 0px;
+            }
+        }
+        .bg-image .container {
+            position: relative;
+            z-index: 1;
+        }
+            .footer-below{
+            text-align:center;
+            font-size: 30px;
+            }
+        @media screen and (max-width: 600px) {
+        .footer-below{
+            text-align:center;
+            font-size: 18px;
+            }
+        }
+    </style>
 </head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<body style="background-color: skyblue;">
+    {% if user.is_authenticated %}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-    {% if not user.is_authenticated %}
-        <a class="navbar-brand me-5 ms-3" href="{% url 'Home' %}">Dashboard</a>
-    <div class="collapse navbar-collapse">
-    <ul class="navbar-nav mr-auto mt-2 mt-lg-0 bd-navbar-nav flex-row" style="position: absolute; right: 20px;">
-      <li class="nav-item">
-        <a class="nav-link active" href="{% url 'LoginPage' %}"><button type="button"
-                                                                        class="btn btn-outline-secondary border-white text-white">Login</button></a>
-      </li>
-    </ul>
-  </div>
-    {% elif user.is_authenticated %}
-    <a class="navbar-brand me-5 ms-3" href="{% url 'LoginHome' %}">Dashboard</a>
+    <a class="navbar-brand me-5 ms-3" href="{% url 'LoginHome' %}">K.R. MANGALAM UNIVERSITY</a>
     <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
         <ul class="navbar-nav mt-2 mt-lg-0 bd-navbar-nav flex-row right" style="position: absolute; right: 6%;">
-              <li class="nav-item">
-                  <div
-                          style="display:flex; flex-direction:row; align-item:center; justify-content: space-around; gap:30px" class="name-logout">
-                      <div>
-                           <div style="color:white;font-size:25px">{{request.user}}</div>
-                      </div>
-                      <div>
-                          <a href="{% url 'Logout' %}"><button type="button"
-                                                    class="btn btn-outline-secondary border-white text-white">Logout</button></a>
-                      </div>
+    <li class="nav-item">
+        <div style="display: flex; flex-direction: row;">
+            <div class="text-center text-lg-start me-3">
+                <div style="color:white; font-size: 25px">{{request.user}}</div>
+            </div>
+            <div class="text-center text-lg-start mt-2 mt-lg-0">
+                <a href="{% url 'Logout' %}">
+                    <button type="button" class="btn btn-outline-secondary border-white text-white">Logout</button>
+                </a>
+            </div>
+        </div>
+    </li>
+</ul>
 
-                  </div>
-              </li>
-        </ul>
         {% if perms.app.can_view_superuser %}
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0 bd-navbar-nav flex-row">
               <li class="nav-item">
@@ -99,14 +139,14 @@
         {% if not perms.app.can_view_superuser and not perms.app.can_view_staff %}
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0 bd-navbar-nav flex-row">
             <li class="nav-item">
-                <a class="nav-link active" href="{% url 'CreateGrievance' %}""><button type="button"
+                <a class="nav-link active" href="{% url 'CreateGrievance' %}"><button type="button"
                                                     class="btn btn-outline-secondary border-white text-white">Create
                     Grievances</button></a>
             </li>
         </ul>
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0 bd-navbar-nav flex-row">
             <li class="nav-item">
-                <a class="nav-link active" href="{% url 'StudentShowGrievance' %}""><button type="button"
+                <a class="nav-link active" href="{% url 'StudentShowGrievance' %}"><button type="button"
                                                     class="btn btn-outline-secondary border-white text-white">Check
                     Grievances Status</button></a>
             </li>
@@ -116,152 +156,76 @@
     {% endif %}
 </nav>
 
-
-
-
-
-
-<!--<nav class="navbar navbar-expand-lg navbar-dark bg-dark">-->
-<!--    <br>-->
-<!--    <div class="collapse navbar-collapse" id="navbarNav">-->
-<!--        {% if not user.is_authenticated %}-->
-<!--         <a class="navbar-brand ms-5 me-5" href="{% url 'Home' %}">Dashboard</a>-->
-<!--    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">-->
-<!--        <span class="navbar-toggler-icon"></span>-->
-<!--    </button>-->
-<!--        <ul class="navbar-nav ml-auto">-->
-<!--            <li class="nav-item active">-->
-<!--                <a class="nav-link ms-5 text-white" href="{% url 'LoginPage' %}"><span class="link-text">Login</span></a>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--        {% elif user.is_authenticated %}-->
-<!--         <a class="navbar-brand ms-5 me-5" href="{% url 'LoginHome' %}">Dashboard</a>-->
-<!--    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">-->
-<!--        <span class="navbar-toggler-icon"></span>-->
-<!--    </button>-->
-<!--        {% if perms.app.can_view_superuser %}-->
-
-<!--        <ul class="navbar-nav">-->
-<!--            <li class="nav-item active">-->
-<!--                <a class="nav-link ms-5 text-white" href="{% url 'Analytics' %}"><span class="link-text">Analytics</span></a>-->
-<!--            </li>-->
-<!--            <li class="nav-item active">-->
-<!--                <a class="nav-link ms-5 text-white" href="{% url 'ShowUsers' %}"><span class="link-text">Show All-->
-<!--                    Users</span></a>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--        <ul class="navbar-nav">-->
-<!--            <li class="nav-item active">-->
-<!--                <a class="nav-link ms-5 text-white" href="{% url 'ShowStudents' %}"><span class="link-text">Show All-->
-<!--                    Students</span></a>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--        <ul class="navbar-nav">-->
-<!--            <li class="nav-item active">-->
-<!--                <a class="nav-link ms-5 text-white" href="{% url 'ShowTeachers' %}"><span class="link-text">Show All-->
-<!--                    Teachers</span></a>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--        <ul class="navbar-nav">-->
-<!--            <li class="nav-item active">-->
-<!--                <a class="nav-link ms-5 text-white" href="{% url 'CreateGrievanceUser' %}"><span-->
-<!--                        class="link-text">Create Grievance User</span></a>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--        {% endif %}-->
-<!--        {% if perms.app.can_view_staff and not perms.app.can_view_superuser %}-->
-<!--        <ul class="navbar-nav">-->
-<!--            <li class="nav-item active">-->
-<!--                <a class="nav-link ms-5 text-white" href="{% url 'ShowStudents' %}"><span class="link-text">Show All-->
-<!--                    Students</span></a>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--        {% endif %}-->
-<!--       {% if perms.app.can_view_superuser or perms.app.can_view_staff %}-->
-<!--        <ul class="navbar-nav">-->
-<!--            <li class="nav-item active">-->
-<!--                <a class="nav-link ms-5 text-white" href="{% url 'CreateStudent' %}"><span class="link-text">Create-->
-<!--                    Student Id</span></a>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--        <ul class="navbar-nav">-->
-<!--            <li class="nav-item active">-->
-<!--                <a class="nav-link ms-5 text-white" href="{% url 'ShowAllGrivances' %}"><span class="link-text">Show-->
-<!--                    Grievance</span></a>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--        {% endif %}-->
-<!--        {% if not perms.app.can_view_superuser and not perms.app.can_view_staff %}-->
-<!--        <ul class="navbar-nav">-->
-<!--            <li class="nav-item active">-->
-<!--                <a class="nav-link ms-5 text-white" href="{% url 'CreateGrievance' %}"><span class="link-text">Create-->
-<!--                    Grievance</span></a>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--        <ul class="navbar-nav">-->
-<!--            <li class="nav-item active">-->
-<!--                <a class="nav-link ms-5 text-white" href="{% url 'StudentShowGrievance' %}"><span class="link-text">Check Status</span></a>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--        {% endif %}-->
-<!--        <ul class="navbar-nav ml-auto" style="position: absolute; right: 15px;">-->
-<!--            <li class="nav-item">-->
-<!--                <button type="submit" class="btn btn-primary"><a href="{% url 'Logout' %}"><strong style="color:white">Logout</strong></a></button>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--        {% endif %}-->
-<!--        </div>-->
-<!--</nav>-->
 {% block content %}
-<!--<div id="container">-->
-<!--    <div style="color:white"> <p style="margin: 20px;">K.R. Mangalam University (KRMU) is a private university located in Sohna, Gurugram-->
-<!--        district,-->
-<!--        Haryana,-->
-<!--        India. It was established in 2013 by the K.R. Mangalam Group through the Haryana Private Universities Act,-->
-<!--        2013.</p>-->
-<!--        <p style="margin: 20px;">-->
-<!--            KRMU is a multidisciplinary university that offers a wide range of undergraduate and postgraduate programs in the fields of engineering, science, management, law, and humanities. The university also offers doctoral programs in selected disciplines.-->
-<!--        </p>-->
-<!--        <p style="margin: 20px;">-->
-<!--            KRMU has a strong focus on research and innovation. The university has established several research centers and laboratories, and it encourages its faculty and students to conduct research in their respective fields.-->
-<!--        </p>-->
-<!--        <p style="margin: 20px;">-->
-<!--            KRMU has a modern and well-equipped campus. The campus is spread over 26 acres and it houses all the necessary facilities for students, including academic buildings, libraries, laboratories, hostels, and sports facilities.-->
-<!--        </p>-->
-<!--        <p style="margin: 20px;">-->
-<!--            KRMU is a highly ranked university. It is ranked among the top private universities in India by various-->
-<!--            national and international rankings agencies.-->
-<!--        </p>-->
-<!--        <p style="margin: 20px;">Here are some of the key features of KRMU:-->
-<!--            <ul>-->
-<!--                <li>Strong focus on academics and research</li>-->
-<!--                <li>Wide range of undergraduate and postgraduate programs</li>-->
-<!--                <li>Experienced and qualified faculty</li>-->
-<!--                <li>Modern and well-equipped campus</li>-->
-<!--                <li>Strong placement record</li>-->
-<!--                <li>Active student life</li>-->
-<!--            </ul>-->
-<!--        <p style="margin:20px">-->
-<!--            <b>Campus life:</b><br> KRMU has a vibrant campus life. The university organizes a variety of events and-->
-<!--            activities-->
-<!--            for students, including sports tournaments, cultural festivals, and technical workshops. KRMU also has several student clubs and societies that cater to a variety of interests.-->
-<!--        </p>-->
-<!--    </div>-->
 
 
-<!--    <div style=" background: transparent; "><img style="border-radius: 30px;" src="{% static 'images/krmu.jpg' %}">-->
-<!--    <img style="width:100%; margin-top: 20%; border-radius: 30px;" src="{% static 'images/download.png' %}">-->
-<!--    </div>-->
-<!--</div>-->
-<!--<br>-->
-<!--<h4> KR Mangalam University Contact Number +91 99999 99999</h4>-->
-<!--<br>-->
+    {% if not user.is_authenticated %}
 
+<div class="bg-image">
+<div class="bg-image">
+       <a href="{% url 'Home' %}"><img src="{% static 'images/logo.png' %}" class="img-fluid"></a>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 custom-col login" style="background-color: rgba(255, 255, 255, 0.4);">
+                <div class="marquee-container">
+                    <marquee direction="up" scrollamount="3" class="custom-col">
+                <div class="m-3">
 
+                    <b>KR Mangalam University</b>
+                    <ul style="margin-top: 10px;">
+                        <li>The university offers lots of courses like engineering, management, law, and more.</li>
+                        <li>Professors here are really smart and care about teaching well.</li>
+                        <li>We have great classrooms, labs, and a big library.</li>
+                        <li>If you have a cool idea, we'll help you turn it into something real.</li>
+                        <li>We work with companies to make sure you can get a good job when you're done.</li>
+                        <li>You can do internships and visit companies too.</li>
+                        <li>It's not all study - we have fun activities, events, and games.</li>
+                    </ul>
+                    <b>About The Portal</b>
+                    <ul style="margin-top: 10px;">
+                        <li><b>Easy Access:</b><br> Accessible 24/7 from anywhere.</li>
+                        <li><b>Anonymous Reporting:</b><br> Report grievances without revealing your identity.</li>
+                        <li><b>Various Categories:</b><br> Categorize your concerns for efficient handling.</li>
+                        <li><b>Real-time Tracking:</b><br> Stay updated on the status of your complaints.</li>
+                        <li><b>Prompt Response:</b><br> Expect timely and effective responses.</li>
+                        <li><b>Confidentiality:</b><br> Your privacy and information are safeguarded.</li>
+                        <li><b>Quick Resolutions:</b><br> Swiftly address issues to enhance your academic journey.</li>
+                        <li><b>Submit a Grievance:</b><br> Fill out a simple form with your concern's details.</li>
+                        <li><b>Track Progress:</b><br> Monitor the status of your complaint in real-time.</li>
+                        <li><b>Receive Response:</b><br> Get a response and resolution from our dedicated team.</li>
+                    </ul>
 
+                </div>
+                    </marquee>
+                </div>
+            </div>
+            <div class="col-md-6 custom-col login" style="background-color: rgba(255, 255, 255, 0.4);">
+                    <form action="{% url 'Home' %}" method="POST" class="shadow-lg p-4 ms-5 me-5 rounded">
+                        {% csrf_token %}
+                        <div style="text-align:center">
+                            <h1 class="font-weight-bold">Login Your Account</h1>
+                        </div>
+                        {% for message in messages %}
+                            <div class="alert alert-danger">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
 
-
-
+                        {{form|crispy}}
+                        <div class="text-center">
+                            <input class="btn btn-primary" type="submit" value="Login">
+                        </div>
+                    </form>
+            </div>
+        </div>
+    </div>
+    <footer class="position-fixed bottom-0 start-0 end-0 z-index-1">
+  <div class="container">
+    <p class="footer-below">K.R. MANGALAM UNIVERSITY CONTACT NO. +91 99999 99999</p>
+  </div>
+</footer>
+</div>
+    {% endif %}
 {% endblock content %}
 
  <!-- Bootstrap JS and jQuery (optional) -->
