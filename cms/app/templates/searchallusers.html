@@ -10,7 +10,7 @@
     <h1 style="text-align:center;">Users List</h1>
     <div class="table-responsive">
     <table class="table table-bordered" style="text-align:center;">
-            <thead>
+            <thead style="background-color: lightgrey;">
                 <tr>
                     <th>Username</th>
                     <th>Email</th>
@@ -34,8 +34,10 @@
                         {% endif %}
                     </td>
                     <td>
-                        <button type="button" class="btn btn-primary custom-btn-lg"
-                                                data-target="#updatedetails{{ i.id }}">Update User Details</button>
+                        <a href="{% url 'updateuserdetails' i.id %}"><button type="button"
+                                                                             class="btn btn-primary custom-btn-lg "
+                                                data-target="#updatedetails{{ i.id }}"
+                                data-toggle="modal">Update User Details</button></a>
                     </td>
                     <td>
                         <a href="{% url 'DeleteAllUsers' i.id %}">

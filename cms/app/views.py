@@ -18,7 +18,7 @@ from django.contrib.auth.models import Permission
 class LoginPage(View):
     def get(self, request):
         if request.user.is_authenticated:
-            return redirect('Home')
+            return redirect('LoginHome')
         else:
             form = LoginForm()
             return render(request, 'base.html', {'form': form})
@@ -201,11 +201,9 @@ class UpdateUserDetails(View):
 
     def post(self, request, pk):
         user = get_object_or_404(User, pk=pk)
-        print(user, 'user12')
         if user.is_staff:
             form = GrievanceSignupform(request.POST, instance=user)
             if form.is_valid():
-                print('its inside')
                 password1 = form.cleaned_data['password1']
                 password2 = form.cleaned_data['password2']
                 if password1 != password2:
@@ -213,7 +211,7 @@ class UpdateUserDetails(View):
                     return render(request, 'updatedetails.html', {'form': form, 'id': pk})
                 user.set_password(password1)
                 form.save()
-                return redirect('Home')
+                return redirect('ShowTeachers')
             else:
                 messages.error(request, 'Password Is Not Match')
                 return render(request, 'updatedetails.html', {'form': form, 'id': pk})
@@ -247,7 +245,7 @@ class UpdateUserDetails(View):
                     user.last_name = last_name
                     user.save()
 
-                    return HttpResponseRedirect(reverse('Home'))
+                    return redirect('ShowStudents')
                 except Student.DoesNotExist:
                     # If Student doesn't exist, create a new one
                     student = Student.objects.create(
@@ -285,11 +283,11 @@ def DeleteAllUser(request, pk):
 
 def DeleteTeachersUser(request, pk):
     user = User.objects.get(pk=pk).delete()
-    return redirect('ShowUsers')
+    return redirect('ShowTeachers')
 
 def DeleteStudentUser(request, pk):
     user = User.objects.get(pk=pk).delete()
-    return redirect('ShowUsers')
+    return redirect('ShowStudents')
 
 @method_decorator(login_required(login_url="/"), name='dispatch')
 class UserLogout(View):

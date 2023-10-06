@@ -58,7 +58,7 @@
         }
     </style>
 </head>
-<body style="background-color: skyblue;">
+<body style="background-color: beige;">
     {% if user.is_authenticated %}
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
@@ -161,7 +161,6 @@
 
     {% if not user.is_authenticated %}
 
-<div class="bg-image">
 <div class="bg-image">
        <a href="{% url 'Home' %}"><img src="{% static 'images/logo.png' %}" class="img-fluid"></a>
     <div class="container">

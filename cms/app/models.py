@@ -285,7 +285,11 @@ class Student(models.Model):
     roll_number = models.IntegerField(null=True, blank=True)
     School = models.CharField(choices=SCHOOL_CHOICES, max_length=60, null=True, blank=True)
     Branch = models.CharField(choices=COURSE_CHOICES, max_length=255, null=True, blank=True)
-    contact_number = models.IntegerField(null=True, blank=True)
+    contact_number = models.BigIntegerField(
+        null=True,
+        blank=True,
+        validators=[MaxValueValidator(limit_value=9999999999, message='Contact number is too large.')]
+    )
     email_id = models.EmailField(max_length=255, null=True, blank=True)
     USERNAME_FIELD = 'username'
 
