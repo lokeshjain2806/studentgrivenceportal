@@ -10,7 +10,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import ListView
-from .forms import GrievanceSignupform, LoginForm, StudentSignupform, CreateGrievanceForm, UpdateGrievanceStatusForm
+from .forms import GrievanceSignupform, LoginForm, StudentSignupform, CreateGrievanceForm, UpdateGrievanceStatusForm, \
+    ResetPassword
 from .models import Student, Complain
 from django.contrib.auth.models import Permission
 
@@ -30,19 +31,15 @@ class LoginPage(View):
             password = form.cleaned_data['password']
             user = authenticate(request, username=username, password=password)
             if user:
-                login(request, user)  # Log the user in
-                return redirect('LoginHome')  # Redirect to the home page upon successful login
+                login(request, user)
+                if request.user.is_superuser:
+                    return redirect('Analytics')
+                else:
+                    return redirect('LoginHome')
             else:
                 messages.error(request,'Username Or Password Are Not Correct')
                 return redirect('Home')
 
-
-# def Dashboard(request):
-#     if not request.user.is_authenticated:
-#         form = LoginForm()
-#         return render(request, 'base.html', {'form': form})
-#     else:
-#         return redirect('LoginHome')
 
 
 @login_required(login_url="/")
@@ -62,7 +59,6 @@ class CreateGrievanceUserView(PermissionRequiredMixin, View):
         form = GrievanceSignupform(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
-            print(username, 'username')
             password1 = form.cleaned_data['password1']
             password2 = form.cleaned_data['password2']
             if password1 != password2:
@@ -188,9 +184,7 @@ def ShowTeachers(request):
 class UpdateUserDetails(View):
     def get(self, request, pk):
         user = get_object_or_404(User, pk=pk)
-        print( user,'user')
         if user.is_staff:
-            print('its inside')
             form = GrievanceSignupform(instance=user)
             form.fields['username'].widget.attrs['readonly'] = 'readonly'
         else:
@@ -305,6 +299,7 @@ class CreateGrievanceView(View):
 
     def post(self, request):
         form = CreateGrievanceForm(request.POST)
+        print(form.is_valid())
         if form.is_valid():
             student_instance = request.user.student
             complain = Complain.objects.create(
@@ -325,7 +320,7 @@ def Student_Show_Grievance(request):
         if complain:
             return render(request, 'showgrivance.html', {'complains': complain})
         else:
-            return HttpResponse("You have no complaints.")
+            return render(request,'nocomplain.html')
 
 
 @method_decorator(login_required(login_url="/"), name='dispatch')
@@ -353,6 +348,7 @@ class UpdateGrivanceStatus(PermissionRequiredMixin, View):
                 'subject': grievance.subject,
                 'description': grievance.description,
                 'status': grievance.status,
+                'remarks' : grievance.remarks,
             }
             form = UpdateGrievanceStatusForm(initial=initial_data)
             return render(request, 'updategrievancestatus.html', {'form': form})
@@ -367,6 +363,7 @@ class UpdateGrivanceStatus(PermissionRequiredMixin, View):
                 grievance.subject = grievance.subject
                 grievance.description = grievance.description
                 grievance.status = form.cleaned_data['status']
+                grievance.remarks = form.cleaned_data['remarks']
                 grievance.save()
                 return redirect('ShowAllGrivances')
     except Exception as e:
@@ -392,7 +389,7 @@ def analytics_view(request):
             complaint_percentages.append(percentage)
             complaint_types.append(complaint_type)
         except:
-            return HttpResponse('No Complains')
+            return render(request, 'noanalytics.html')
 
     context = {
         'complaint_types': complaint_types,
@@ -400,3 +397,128 @@ def analytics_view(request):
     }
 
     return render(request, 'analytics.html', context)
+
+class Profile(View):
+    def get(self, request, pk):
+        user = get_object_or_404(User, pk=pk)
+        if user.is_staff:
+            form = GrievanceSignupform(instance=user)
+            form.fields['username'].widget.attrs['readonly'] = 'readonly'
+            form.fields['first_name'].widget.attrs['readonly'] = 'readonly'
+            form.fields['last_name'].widget.attrs['readonly'] = 'readonly'
+            form.fields['email'].widget.attrs['readonly'] = 'readonly'
+        else:
+            student = get_object_or_404(Student, pk=pk)
+            form = StudentSignupform(instance=student)
+            form.fields['user_username'].widget.attrs['readonly'] = 'readonly'
+            form.fields['first_name'].widget.attrs['readonly'] = 'readonly'
+            form.fields['last_name'].widget.attrs['readonly'] = 'readonly'
+            form.fields['email'].widget.attrs['readonly'] = 'readonly'
+            form.fields['roll_number'].widget.attrs['readonly'] = 'readonly'
+            form.fields['school'].widget.attrs['readonly'] = 'readonly'
+            form.fields['branch'].widget.attrs['readonly'] = 'readonly'
+            form.fields['contact_number'].widget.attrs['readonly'] = 'readonly'
+        return render(request, 'profile.html', {'form': form, 'id': pk})
+
+    def post(self, request, pk):
+        user = get_object_or_404(User, pk=pk)
+        if user.is_staff:
+            form = GrievanceSignupform(request.POST, instance=user)
+            if form.is_valid():
+                password1 = form.cleaned_data['password1']
+                password2 = form.cleaned_data['password2']
+                if password1 != password2:
+                    messages.error(request, 'Passwords Do Not Match')
+                    return render(request, 'profile.html', {'form': form, 'id': pk})
+                user.set_password(password1)
+                user.save()
+
+                # Authenticate the user with the new password
+                updated_user = authenticate(username=user.username, password=password1)
+                if updated_user is not None:
+                    login(request, updated_user)  # Log the user in with the new credentials
+
+                return redirect('LoginHome')
+            else:
+                messages.error(request, 'Password Is Not Match')
+                return render(request, 'profile.html', {'form': form, 'id': pk})
+        elif not user.is_staff:
+            form = StudentSignupform(request.POST)
+            if form.is_valid():
+                password1 = form.cleaned_data['password1']
+                password2 = form.cleaned_data['password2']
+                if password1 != password2:
+                    messages.error(request, 'Passwords Do Not Match')
+                    return render(request, 'profile.html', {'form': form, 'id': pk})
+                username = form.cleaned_data['user_username']
+                password = form.cleaned_data['password1']
+                email = form.cleaned_data['email']
+                first_name = form.cleaned_data['first_name']
+                last_name = form.cleaned_data['last_name']
+
+                try:
+                    student = Student.objects.get(username=user)
+                    student.name = f"{first_name} {last_name}"
+                    student.roll_number = form.cleaned_data['roll_number']
+                    student.School = form.cleaned_data['school']
+                    student.Branch = form.cleaned_data['branch']
+                    student.contact_number = form.cleaned_data['contact_number']
+                    student.email_id = email
+                    student.save()
+
+                    user.set_password(password)
+                    user.email = email
+                    user.first_name = first_name
+                    user.last_name = last_name
+                    user.save()
+                    updated_user = authenticate(username=username, password=password)
+                    if updated_user is not None:
+                        login(request, updated_user)
+
+                    return redirect('LoginHome')
+                except Student.DoesNotExist:
+                    student = Student.objects.create(
+                        username=user,
+                        name=f"{first_name} {last_name}",
+                        roll_number=form.cleaned_data['roll_number'],
+                        School=form.cleaned_data['school'],
+                        Branch=form.cleaned_data['branch'],
+                        contact_number=form.cleaned_data['contact_number'],
+                        email_id=email,
+                    )
+                    student.save()
+                    user.set_password(password)
+                    user.email = email
+                    user.first_name = first_name
+                    user.last_name = last_name
+                    user.save()
+                    updated_user = authenticate(username=username, password=password)
+                    if updated_user is not None:
+                        login(request, updated_user)
+                    return redirect('LoginHome')
+                except User.DoesNotExist:
+                    return HttpResponse("User does not exist")
+        return HttpResponse("Form submission failed or encountered an error")
+
+class resetpassword(View):
+    def get(self,request):
+        form = ResetPassword
+        return render(request, 'resetpassword.html', {'form': form})
+
+    def post(self, request):
+        form = ResetPassword(request.POST)
+        if form.is_valid():
+            user_name = form.cleaned_data.get('user_name')
+            user = User.objects.filter(username=user_name).exists()
+            if user:
+                user = get_object_or_404(User, username=user_name)
+                user_email = user.email
+                print(user_email)
+                if user_email:
+                    messages.success(request, 'Mail Send Successfully')
+                else:
+                    messages.error(request, 'Contact Admin Office')
+                return render(request, 'resetpassword.html', {'form': form})
+            else:
+                messages.error(request,'Username Not Valid')
+                return render(request, 'resetpassword.html', {'form': form})

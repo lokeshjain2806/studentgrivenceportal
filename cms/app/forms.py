@@ -129,7 +129,17 @@ class UpdateGrievanceStatusForm(forms.ModelForm):
                               widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     status = forms.ChoiceField(label='Update Status', choices=Complain.STATUS_CHOICES,
                                       widget=forms.Select(attrs={'class': 'form-control'}))
+    remarks = forms.CharField(label='Update Status',
+                                      widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     class Meta:
         model = Complain
         fields = ['username', 'student', 'complain_type', 'subject', 'description', 'status']
+
+
+class ResetPassword(forms.ModelForm):
+    user_name = forms.CharField(label='Username', widget=forms.TextInput(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = User
+        fields = ['user_name']

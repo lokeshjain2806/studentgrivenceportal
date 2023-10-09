@@ -56,6 +56,10 @@
             font-size: 18px;
             }
         }
+        .dropdown-item:hover {
+            background-color: #007bff;
+            color: white;
+          }
     </style>
 </head>
 <body style="background-color: beige;">
@@ -72,9 +76,14 @@
             <div class="text-center text-lg-start me-3">
                 <div style="color:white; font-size: 25px">{{request.user}}</div>
             </div>
+            <div class="text-center text-lg-start me-4">
+                <a href="{% url 'Profile' user.id%}">
+                    <img src="{% static 'images/profile.png' %}" style="height: 4vh;">
+                </a>
+            </div>
             <div class="text-center text-lg-start mt-2 mt-lg-0">
                 <a href="{% url 'Logout' %}">
-                    <button type="button" class="btn btn-outline-secondary border-white text-white">Logout</button>
+                    <button type="button" class="btn btn-danger border-white text-white">Logout</button>
                 </a>
             </div>
         </div>
@@ -85,53 +94,45 @@
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0 bd-navbar-nav flex-row">
               <li class="nav-item">
                   <a class="nav-link active" href="{% url 'Analytics' %}"><button type="button"
-                                                    class="btn btn-outline-secondary border-white text-white">
+                                                    class="btn btn-outline-primary border-white text-white">
                       Analytics</button></a>
               </li>
         </ul>
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0 bd-navbar-nav flex-row">
                 <li class="nav-item">
                     <a class="nav-link active" href="{% url 'ShowUsers' %}"><button type="button"
-                                                    class="btn btn-outline-secondary border-white text-white">Show
+                                                    class="btn btn-outline-primary border-white text-white">Show
                         All Users</button></a>
                 </li>
         </ul>
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0 bd-navbar-nav flex-row">
-            <li class="nav-item">
-                <a class="nav-link active" href="{% url 'CreateGrievanceUser' %}"><button type="button"
-                                                    class="btn btn-outline-secondary border-white text-white">Create
-                    Teacher</button></a>
+            <li class="nav-item dropdown m-2">
+            <a class="btn btn-outline-primary border-white text-white dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Teacher
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" href="{% url 'CreateGrievanceUser' %}">Create Teacher</a>
+                <a class="dropdown-item" href="{% url 'ShowTeachers' %}">Show Teachers</a>
+            </div>
             </li>
         </ul>
-        <ul class="navbar-nav mr-auto mt-2 mt-lg-0 bd-navbar-nav flex-row">
-            <li class="nav-item">
-                <a class="nav-link active" href="{% url 'ShowTeachers' %}"><button type="button"
-                                                    class="btn btn-outline-secondary border-white text-white">Show
-                    All Teachers</button></a>
-            </li>
-        </ul>
-
-                  {% endif %}
+        {% endif %}
         {% if perms.app.can_view_superuser or perms.app.can_view_staff %}
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0 bd-navbar-nav flex-row">
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'CreateStudent' %}"><button type="button"
-                                                    class="btn btn-outline-secondary border-white text-white">Create
-                        Student</button></a>
-                </li>
-        </ul>
-        <ul class="navbar-nav mr-auto mt-2 mt-lg-0 bd-navbar-nav flex-row">
-            <li class="nav-item">
-                <a class="nav-link active" href="{% url 'ShowStudents' %}"><button type="button"
-                                                    class="btn btn-outline-secondary border-white text-white">Show All
-                    Students</button></a>
+            <li class="nav-item dropdown">
+            <a class="btn btn-outline-primary border-white text-white dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Student
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" href="{% url 'CreateStudent' %}">Create Student</a>
+                <a class="dropdown-item" href="{% url 'ShowStudents' %}">Show Students</a>
+            </div>
             </li>
         </ul>
-
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0 bd-navbar-nav flex-row">
             <li class="nav-item">
                 <a class="nav-link active" href="{% url 'ShowAllGrivances' %}"><button type="button"
-                                                    class="btn btn-outline-secondary border-white text-white">Show
+                                                    class="btn btn-outline-primary border-white text-white">Show
                     Grievances</button></a>
             </li>
         </ul>
@@ -140,14 +141,14 @@
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0 bd-navbar-nav flex-row">
             <li class="nav-item">
                 <a class="nav-link active" href="{% url 'CreateGrievance' %}"><button type="button"
-                                                    class="btn btn-outline-secondary border-white text-white">Create
+                                                    class="btn btn-outline-primary border-white text-white">Create
                     Grievances</button></a>
             </li>
         </ul>
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0 bd-navbar-nav flex-row">
             <li class="nav-item">
                 <a class="nav-link active" href="{% url 'StudentShowGrievance' %}"><button type="button"
-                                                    class="btn btn-outline-secondary border-white text-white">Check
+                                                    class="btn btn-outline-primary border-white text-white">Check
                     Grievances Status</button></a>
             </li>
         </ul>
@@ -204,17 +205,18 @@
                         <div style="text-align:center">
                             <h1 class="font-weight-bold">Login Your Account</h1>
                         </div>
-                        {% for message in messages %}
+                        {{form|crispy}}
+                        <div class="text-center">
+                            <input class="btn btn-primary" type="submit" value="Login"><br>
+                            <a href="{% url 'resetpassword' %}" class="text-danger"><b>Forgot Password</b></a>
+                            {% for message in messages %}
                             <div class="alert alert-danger">
                                 {{ message }}
                             </div>
-                        {% endfor %}
-
-                        {{form|crispy}}
-                        <div class="text-center">
-                            <input class="btn btn-primary" type="submit" value="Login">
                         </div>
                     </form>
+
+                        {% endfor %}
             </div>
         </div>
     </div>

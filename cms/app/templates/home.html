@@ -3,12 +3,12 @@
 
 {% block title %}Home Page {% endblock title %}
 {% block content %}
-<div class="container-fluid shadow-lg mt-2 bg-body rounded">
+<div class="container-fluid mt-2 rounded" style="background-color: beige;">
     <marquee direction="left" scrollamount="3">
         <h2 class="text-danger mt-2">Welcome {{user.first_name}} {{user.last_name}}</h2>
     </marquee>
 </div>
-<div class="container-fluid shadow-lg mt-3 bg-body rounded">
+<div class="container-fluid mt-3 bg-body rounded" style="padding-left: 0px;padding-right: 0px;">
     <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
       <div class="carousel-inner">
           <div class="carousel-item active">

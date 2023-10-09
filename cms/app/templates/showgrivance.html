@@ -16,6 +16,7 @@
                     <th>Description</th>
                     <th>Complain Generated Time</th>
                     <th>Status</th>
+                    <th>Remarks</th>
                 </tr>
             </thead>
             <tbody>
@@ -26,13 +27,16 @@
                     <td>{{ i.description|first|upper }}{{ i.description|slice:"1:" }}</td>
                     <td>{{ i.complain_date }}</td>
                     <td>{{ i.status }}</td>
+                    <td>{{ i.remarks }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 {% else %}
-<h1 style="text-align:center;margin-top: 35%;">No Complain Found</h1>
+<div class="container mt-5 mb-5 bg-body rounded" style="height:80vh;">
+    <div style="text-align:center;padding: 35vh;"><h1>You Have No Complains</h1></div>
+</div>
 {% endif %}
 </div>
 

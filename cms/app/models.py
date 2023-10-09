@@ -338,6 +338,7 @@ class Complain(models.Model):
     description = models.TextField()
     complain_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     status = models.CharField(choices=STATUS_CHOICES, max_length=100, default='Pending')
+    remarks = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return self.complain_type

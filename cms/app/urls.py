@@ -17,10 +17,12 @@ Including another URLconf
 from django.urls import path
 from .views import LoginPage, UserLogout, CreateGrievanceUserView, CreateStudent, AllShowUsers, DeleteAllUser, \
     search, UpdateUserDetails, CreateGrievanceView, ShowStudents, SearchStudents, ShowTeachers, SearchTeachers, \
-    Student_Show_Grievance, ShowAllGrivances, UpdateGrivanceStatus, Home, analytics_view, DeleteTeachersUser, DeleteStudentUser
+    Student_Show_Grievance, ShowAllGrivances, UpdateGrivanceStatus, Home, analytics_view, DeleteTeachersUser, \
+    DeleteStudentUser, Profile, resetpassword
 
 urlpatterns = [
     path('', LoginPage.as_view(), name='Home'),
+    path('resetpassword/', resetpassword.as_view(), name ='resetpassword'),
     path('home/', Home, name='LoginHome'),
     # path('login/', LoginPage.as_view(), name='LoginPage'),
     path('analytics/', analytics_view, name='Analytics'),
@@ -40,6 +42,7 @@ urlpatterns = [
     path('home/creategrievanceview/', CreateGrievanceView.as_view(), name='CreateGrievance'),
     path('home/createstudentview/', CreateStudent.as_view(), name='CreateStudent'),
     path('home/creategrievanceuser/', CreateGrievanceUserView.as_view(), name='CreateGrievanceUser'),
+    path('home/profile/<int:pk>', Profile.as_view(), name='Profile'),
     path('logout/', UserLogout.as_view(), name='Logout'),
 
 ]

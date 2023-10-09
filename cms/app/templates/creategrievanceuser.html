@@ -6,14 +6,18 @@
 {% block content %}
 <div class="mt-5">
 <div class="container">
-<form action="" method="POST" class="shadow-lg p-5 mb-5 bg-body rounded"  id="signup-form">{% csrf_token %}
+<form action="" method="POST" class="shadow-lg p-5 mb-5 bg-body rounded"  id="signup-form"cd >{% csrf_token %}
     <div id="popup-user-message" class="popup-message">
         {% if messages %}
-            <ul class="messages text-danger">
-                {% for message in messages %}
-                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                {% endfor %}
-            </ul>
+        <ul class="messages" style="list-style-type: none;">
+            {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                    <span style="color: {% if message.tags == 'success' %}blue{% elif message.tags == 'error' %}red{% else %}black{% endif %};">
+                        {{ message }}
+                    </span>
+                </li>
+            {% endfor %}
+        </ul>
         {% endif %}
     </div>
     {{form|crispy}}
@@ -28,8 +32,8 @@
         const password1 = document.getElementById('id_password1').value;
         const password2 = document.getElementById('id_password2').value;
         if (password1 !== password2) {
-            event.preventDefault(); // Prevent form submission
-            alert('Passwords do not match.'); // Show error message in a popup
+            event.preventDefault();
+            alert('Passwords do not match.');
         }
     });
 </script>
