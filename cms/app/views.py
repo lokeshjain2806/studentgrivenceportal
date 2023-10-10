@@ -1,8 +1,13 @@
+import uuid
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
+from django.contrib.auth.views import PasswordResetView
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
+from django.core.mail import send_mail
 from django.db.models import Q
 from django.urls import reverse
 from django.http import HttpResponse, HttpResponseRedirect
@@ -14,6 +19,8 @@ from .forms import GrievanceSignupform, LoginForm, StudentSignupform, CreateGrie
     ResetPassword
 from .models import Student, Complain
 from django.contrib.auth.models import Permission
+from cms import settings
+
 
 
 class LoginPage(View):
@@ -500,25 +507,11 @@ class Profile(View):
                     return HttpResponse("User does not exist")
         return HttpResponse("Form submission failed or encountered an error")
 
-class resetpassword(View):
-    def get(self,request):
-        form = ResetPassword
-        return render(request, 'resetpassword.html', {'form': form})
-
-    def post(self, request):
-        form = ResetPassword(request.POST)
-        if form.is_valid():
-            user_name = form.cleaned_data.get('user_name')
-            user = User.objects.filter(username=user_name).exists()
-            if user:
-                user = get_object_or_404(User, username=user_name)
-                user_email = user.email
-                print(user_email)
-                if user_email:
-                    messages.success(request, 'Mail Send Successfully')
-                else:
-                    messages.error(request, 'Contact Admin Office')
-                return render(request, 'resetpassword.html', {'form': form})
-            else:
-                messages.error(request,'Username Not Valid')
-                return render(request, 'resetpassword.html', {'form': form})
+class CustomPasswordResetView(PasswordResetView):
+    def form_valid(self, form):
+        try:
+            user = User.objects.get(email=form.cleaned_data['email'])
+        except ObjectDoesNotExist:
+            messages.error(self.request, 'User with this email does not exist.')
+            return redirect('password-reset')
+        return super().form_valid(form)

@@ -76,15 +76,14 @@
             <div class="text-center text-lg-start me-3">
                 <div style="color:white; font-size: 25px">{{request.user}}</div>
             </div>
-            <div class="text-center text-lg-start me-4">
-                <a href="{% url 'Profile' user.id%}">
-                    <img src="{% static 'images/profile.png' %}" style="height: 4vh;">
-                </a>
-            </div>
-            <div class="text-center text-lg-start mt-2 mt-lg-0">
-                <a href="{% url 'Logout' %}">
-                    <button type="button" class="btn btn-danger border-white text-white">Logout</button>
-                </a>
+            <div class="dropdown">
+                <img src="{% static 'images/profile.png' %}" alt="Image" id="dropdownMenuButton"
+                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 4vh; cursor: pointer;">
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <!-- Dropdown content here -->
+                    <a class="dropdown-item" href="{% url 'Profile' user.id%}">Profile</a>
+                    <a class="dropdown-item" href="{% url 'Logout' %}">Logout</a>
+                </div>
             </div>
         </div>
     </li>
@@ -168,7 +167,7 @@
         <div class="row">
             <div class="col-md-6 custom-col login" style="background-color: rgba(255, 255, 255, 0.4);">
                 <div class="marquee-container">
-                    <marquee direction="up" scrollamount="3" class="custom-col">
+                    <marquee direction="up" scrollamount="3" class="custom-col" id="myMarquee">
                 <div class="m-3">
 
                     <b>KR Mangalam University</b>
@@ -208,7 +207,7 @@
                         {{form|crispy}}
                         <div class="text-center">
                             <input class="btn btn-primary" type="submit" value="Login"><br>
-                            <a href="{% url 'resetpassword' %}" class="text-danger"><b>Forgot Password</b></a>
+                            <a href="{% url 'password-reset' %}" class="text-danger"><b>Forgot Password</b></a>
                             {% for message in messages %}
                             <div class="alert alert-danger">
                                 {{ message }}
@@ -227,6 +226,17 @@
 </footer>
 </div>
     {% endif %}
+    <script>
+        const marquee = document.getElementById('myMarquee');
+            function pauseMarquee() {
+                marquee.stop();
+            }
+            function resumeMarquee() {
+                marquee.start();
+                }
+            marquee.addEventListener('mouseenter', pauseMarquee);
+            marquee.addEventListener('mouseleave', resumeMarquee);
+    </script>
 {% endblock content %}
 
  <!-- Bootstrap JS and jQuery (optional) -->

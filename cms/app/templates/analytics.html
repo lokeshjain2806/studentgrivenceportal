@@ -16,8 +16,6 @@
     <script>
     var complaintTypes = {{ complaint_types|safe }};
     var complaintPercentages = {{ complaint_percentages|safe }};
-
-    // Create a bar chart
     var ctx = document.getElementById('complaintChart').getContext('2d');
     var chart = new Chart(ctx, {
         type: 'bar',

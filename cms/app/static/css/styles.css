@@ -134,3 +134,9 @@ footer {
     height: 7%;
   background:rgba(255, 255, 255, 0.4);
 }
+#hint_id_new_password1 {
+    display: none;
+}
+#hint_id_new_password1 {
+    display: block;
+}
