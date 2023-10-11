@@ -1,5 +1,4 @@
-import uuid
-
+import random
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -16,10 +15,9 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import ListView
 from .forms import GrievanceSignupform, LoginForm, StudentSignupform, CreateGrievanceForm, UpdateGrievanceStatusForm, \
-    ResetPassword
+    OtpVerificationForm
 from .models import Student, Complain
 from django.contrib.auth.models import Permission
-from cms import settings
 
 
 
@@ -38,14 +36,26 @@ class LoginPage(View):
             password = form.cleaned_data['password']
             user = authenticate(request, username=username, password=password)
             if user:
-                login(request, user)
-                if request.user.is_superuser:
-                    return redirect('Analytics')
-                else:
-                    return redirect('LoginHome')
+                num_numbers = 4
+                random_numbers = []
+                for i in range(num_numbers):
+                    random_1_digit = random.randint(1, 9)
+                    random_numbers.append(str(random_1_digit))
+                otp = int(''.join(random_numbers))
+                request.session['user'] = user.id
+                request.session['expected_otp'] = otp
+                request.session.save()
+                subject = 'Login Verification'
+                message = f'Otp For Login: {otp}. Otp is valid for 10 minutes only.'
+                from_email = 'reset9546@gmail.com'
+                recipient_list = [user.email]
+                fail_silently = False
+                send_mail(subject, message, from_email, recipient_list, fail_silently)
+                return redirect('OtpVerification')
             else:
-                messages.error(request,'Username Or Password Are Not Correct')
+                messages.error(request, 'Username Or Password Are Not Correct')
                 return redirect('Home')
+
 
 
 
@@ -110,7 +120,6 @@ class CreateStudent(PermissionRequiredMixin, View):
                 if password1 != password2:
                     error_message = "Please Enter Same Password"
                     return render(request, 'createstudentuser.html', {'form': form, 'error_message': error_message})
-                # Create a new User instance
                 user = User.objects.create_user(
                     username=form.cleaned_data['user_username'],
                     password=password1,
@@ -248,7 +257,6 @@ class UpdateUserDetails(View):
 
                     return redirect('ShowStudents')
                 except Student.DoesNotExist:
-                    # If Student doesn't exist, create a new one
                     student = Student.objects.create(
                         username=user,
                         name=f"{first_name} {last_name}",
@@ -259,8 +267,6 @@ class UpdateUserDetails(View):
                         email_id=email,
                     )
                     student.save()
-
-                    # Update the associated User object
                     user.set_password(password)
                     user.email = email
                     user.first_name = first_name
@@ -270,8 +276,6 @@ class UpdateUserDetails(View):
                     return redirect('Home')
                 except User.DoesNotExist:
                     return HttpResponse("User does not exist")
-
-        # Handle errors here or return an appropriate response
         return HttpResponse("Form submission failed or encountered an error")
 
 
@@ -306,7 +310,6 @@ class CreateGrievanceView(View):
 
     def post(self, request):
         form = CreateGrievanceForm(request.POST)
-        print(form.is_valid())
         if form.is_valid():
             student_instance = request.user.student
             complain = Complain.objects.create(
@@ -380,19 +383,12 @@ class UpdateGrivanceStatus(PermissionRequiredMixin, View):
 def analytics_view(request):
     complaint_counts = {}
     complaint_types = []
-    complaint_percentages = []  # Store percentages instead of values
-
-    # Calculate the total number of complaints
+    complaint_percentages = []
     total_complaints = Complain.objects.count()
-
-    # Loop through each complaint type
     for complaint_type, _ in Complain.COMPLAIN_CATEGORY:
         try:
-        # Count the number of complaints for the current type
             count = Complain.objects.filter(complain_type=complaint_type).count()
-            # Calculate the percentage
             percentage = (count / total_complaints) * 100
-            # Store the percentage in the list
             complaint_percentages.append(percentage)
             complaint_types.append(complaint_type)
         except:
@@ -439,12 +435,9 @@ class Profile(View):
                     return render(request, 'profile.html', {'form': form, 'id': pk})
                 user.set_password(password1)
                 user.save()
-
-                # Authenticate the user with the new password
                 updated_user = authenticate(username=user.username, password=password1)
                 if updated_user is not None:
-                    login(request, updated_user)  # Log the user in with the new credentials
-
+                    login(request, updated_user)
                 return redirect('LoginHome')
             else:
                 messages.error(request, 'Password Is Not Match')
@@ -510,8 +503,39 @@ class Profile(View):
 class CustomPasswordResetView(PasswordResetView):
     def form_valid(self, form):
         try:
-            user = User.objects.get(email=form.cleaned_data['email'])
+            email = form.cleaned_data['email']
+            user = User.objects.get(email=email)
         except ObjectDoesNotExist:
             messages.error(self.request, 'User with this email does not exist.')
             return redirect('password-reset')
         return super().form_valid(form)
+
+
+class otpfun(View):
+    def get(self, request):
+        form = OtpVerificationForm
+        return render(request, 'otpverification.html', {'form': form})
+
+    def post(self, request):
+        form = OtpVerificationForm(request.POST)
+        entered_otp = request.POST.get('otp')
+        expected_otp = request.session.get('expected_otp')
+        user_id = request.session.get('user')
+        user = User.objects.get(id=user_id)
+        if str(entered_otp) == str(expected_otp):
+            login(request, user)
+            if request.user.is_superuser:
+                return redirect('Analytics')
+            else:
+                return redirect('LoginHome')
+        else:
+            return render(request, 'otpverification.html', {'form': form})
+
+
+#                 if request.user.is_superuser:
+#                     return redirect('Analytics')
+#                 else:
+#                     return redirect('LoginHome')
+#             else:
+#                 messages.error(request,'Username Or Password Are Not Correct')
+#                 return redirect('Home')

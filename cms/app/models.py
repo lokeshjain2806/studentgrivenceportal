@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.core.validators import MaxValueValidator
+from django.utils import timezone
+
 
 
 # Create your models here.
@@ -339,6 +341,14 @@ class Complain(models.Model):
     complain_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     status = models.CharField(choices=STATUS_CHOICES, max_length=100, default='Pending')
     remarks = models.CharField(max_length=255, blank=True, null=True)
+    updatestatustime = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.complain_type
+
+    def save(self, *args, **kwargs):
+        if self.pk:
+            original_status = Complain.objects.get(pk=self.pk).status
+            if self.status != original_status:
+                self.updatestatustime = timezone.now()
+        super().save(*args, **kwargs)

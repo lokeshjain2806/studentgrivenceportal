@@ -137,9 +137,5 @@ class UpdateGrievanceStatusForm(forms.ModelForm):
         fields = ['username', 'student', 'complain_type', 'subject', 'description', 'status']
 
 
-class ResetPassword(forms.ModelForm):
-    user_name = forms.CharField(label='Username', widget=forms.TextInput(attrs={'class': 'form-control'}))
-
-    class Meta:
-        model = User
-        fields = ['user_name']
+class OtpVerificationForm(forms.Form):
+    otp = forms.IntegerField(label='Enter Your Otp', widget=forms.TextInput(attrs={'class': 'form-control'}))

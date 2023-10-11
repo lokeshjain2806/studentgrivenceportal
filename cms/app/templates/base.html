@@ -80,7 +80,6 @@
                 <img src="{% static 'images/profile.png' %}" alt="Image" id="dropdownMenuButton"
                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 4vh; cursor: pointer;">
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <!-- Dropdown content here -->
                     <a class="dropdown-item" href="{% url 'Profile' user.id%}">Profile</a>
                     <a class="dropdown-item" href="{% url 'Logout' %}">Logout</a>
                 </div>

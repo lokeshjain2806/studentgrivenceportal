@@ -163,3 +163,6 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'reset9546@gmail.com'
 EMAIL_HOST_PASSWORD = 'fgylpefmqgxlsfai'
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_AGE = 600
