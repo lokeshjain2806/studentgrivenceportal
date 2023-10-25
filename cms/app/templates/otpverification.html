@@ -16,6 +16,11 @@
                     {{ form|crispy }}
                     <input class="btn btn-primary" type="submit" value="Submit">
                 </form>
+                {% for message in messages %}
+                    <div class="alert alert-danger">
+                        {{ message }}
+                    </div>
+                {% endfor %}
                 <script>
                     const hintDiv = document.getElementById('hint_id_new_password1');
                     hintDiv.style.display = 'none';

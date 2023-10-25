@@ -207,15 +207,15 @@
                         <div class="text-center">
                             <input class="btn btn-primary" type="submit" value="Login"><br>
                             <a href="{% url 'password-reset' %}" class="text-danger"><b>Forgot Password</b></a>
-                            {% for message in messages %}
-                            <div class="alert alert-danger">
-                                {{ message }}
-                            </div>
                         </div>
                     </form>
-
-                        {% endfor %}
+                {% for message in messages %}
+                            <div class="alert alert-danger ms-5 me-5">
+                                {{ message }}
+                            </div>
+                            {% endfor %}
             </div>
+
         </div>
     </div>
     <footer class="position-fixed bottom-0 start-0 end-0 z-index-1">

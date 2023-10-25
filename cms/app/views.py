@@ -529,13 +529,5 @@ class otpfun(View):
             else:
                 return redirect('LoginHome')
         else:
+            messages.error(request, 'OTP Not Valid')
             return render(request, 'otpverification.html', {'form': form})
-
-
-#                 if request.user.is_superuser:
-#                     return redirect('Analytics')
-#                 else:
-#                     return redirect('LoginHome')
-#             else:
-#                 messages.error(request,'Username Or Password Are Not Correct')
-#                 return redirect('Home')
