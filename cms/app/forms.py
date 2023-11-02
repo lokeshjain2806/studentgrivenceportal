@@ -139,3 +139,8 @@ class UpdateGrievanceStatusForm(forms.ModelForm):
 
 class OtpVerificationForm(forms.Form):
     otp = forms.IntegerField(label='Enter Your Otp', widget=forms.TextInput(attrs={'class': 'form-control'}))
+
+
+class DateFilterForm(forms.Form):
+    start_date = forms.DateTimeField(label='Start Date', widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}))
+    end_date = forms.DateTimeField(label='End Date', widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}))

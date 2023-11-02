@@ -1,4 +1,6 @@
 import random
+from django.utils import timezone
+import csv
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -8,17 +10,16 @@ from django.contrib.auth.views import PasswordResetView
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.core.mail import send_mail
 from django.db.models import Q
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views import View
-from django.views.generic import ListView
+from django.views.generic import ListView, CreateView, FormView
 from .forms import GrievanceSignupform, LoginForm, StudentSignupform, CreateGrievanceForm, UpdateGrievanceStatusForm, \
-    OtpVerificationForm
+    OtpVerificationForm, DateFilterForm
 from .models import Student, Complain
 from django.contrib.auth.models import Permission
-
 
 
 class LoginPage(View):
@@ -33,7 +34,9 @@ class LoginPage(View):
         form = LoginForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
+            print(username)
             password = form.cleaned_data['password']
+            print(password)
             user = authenticate(request, username=username, password=password)
             if user:
                 num_numbers = 4
@@ -42,9 +45,13 @@ class LoginPage(View):
                     random_1_digit = random.randint(1, 9)
                     random_numbers.append(str(random_1_digit))
                 otp = int(''.join(random_numbers))
+                print(otp)
                 request.session['user'] = user.id
+                print('3')
                 request.session['expected_otp'] = otp
+                print('4')
                 request.session.save()
+                print('5')
                 subject = 'Login Verification'
                 message = f'Otp For Login: {otp}. Otp is valid for 10 minutes only.'
                 from_email = 'reset9546@gmail.com'
@@ -55,8 +62,6 @@ class LoginPage(View):
             else:
                 messages.error(request, 'Username Or Password Are Not Correct')
                 return redirect('Home')
-
-
 
 
 @login_required(login_url="/")
@@ -151,6 +156,7 @@ def search(request):
     data = User.objects.filter(username__icontains=query)
     a = data.exclude(is_superuser=True)
     return render(request, 'searchallusers.html', {'data': a, 'query': query})
+
 
 @permission_required('student.can_view_staff', raise_exception=True)
 @login_required(login_url="/")
@@ -279,20 +285,22 @@ class UpdateUserDetails(View):
         return HttpResponse("Form submission failed or encountered an error")
 
 
-@permission_required("can_view_superuser", raise_exception=True)
 @permission_required("can_view_staff", raise_exception=True)
 @login_required(login_url="/")
 def DeleteAllUser(request, pk):
     user = User.objects.get(pk=pk).delete()
     return redirect('ShowUsers')
 
+
 def DeleteTeachersUser(request, pk):
     user = User.objects.get(pk=pk).delete()
     return redirect('ShowTeachers')
 
+
 def DeleteStudentUser(request, pk):
     user = User.objects.get(pk=pk).delete()
     return redirect('ShowStudents')
+
 
 @method_decorator(login_required(login_url="/"), name='dispatch')
 class UserLogout(View):
@@ -313,11 +321,12 @@ class CreateGrievanceView(View):
         if form.is_valid():
             student_instance = request.user.student
             complain = Complain.objects.create(
-                username = request.user,
+                username=request.user,
                 student=student_instance,
                 complain_type=form.cleaned_data['complain_type'],
                 subject=form.cleaned_data['subject'],
                 description=form.cleaned_data['description'],
+                complain_date=timezone.now(),
             )
             return redirect("StudentShowGrievance")
 
@@ -379,27 +388,67 @@ class UpdateGrivanceStatus(PermissionRequiredMixin, View):
     except Exception as e:
         pass
 
-@permission_required("can_view_superuser", raise_exception=True)
-def analytics_view(request):
-    complaint_counts = {}
-    complaint_types = []
-    complaint_percentages = []
-    total_complaints = Complain.objects.count()
-    for complaint_type, _ in Complain.COMPLAIN_CATEGORY:
-        try:
-            count = Complain.objects.filter(complain_type=complaint_type).count()
-            percentage = (count / total_complaints) * 100
-            complaint_percentages.append(percentage)
-            complaint_types.append(complaint_type)
-        except:
-            return render(request, 'noanalytics.html')
 
-    context = {
-        'complaint_types': complaint_types,
-        'complaint_percentages': complaint_percentages,
-    }
+@method_decorator(login_required(login_url="/"), name='dispatch')
+class analytics_view(PermissionRequiredMixin, View):
+    permission_required = "app.can_view_staff"
 
-    return render(request, 'analytics.html', context)
+    def get(self,request):
+        form = DateFilterForm
+        complaint_counts = {}
+        complaint_types = []
+        complaint_percentages = []
+        total_complaints = Complain.objects.count()
+        for complaint_type, _ in Complain.COMPLAIN_CATEGORY:
+            try:
+                count = Complain.objects.filter(complain_type=complaint_type).count()
+                percentage = (count / total_complaints) * 100
+                complaint_percentages.append(percentage)
+                complaint_types.append(complaint_type)
+            except:
+                return render(request, 'noanalytics.html')
+
+        context = {
+            'complaint_types': complaint_types,
+            'complaint_percentages': complaint_percentages,
+            'form': form,
+        }
+
+        return render(request, 'analytics.html', context)
+    
+    def post(self, request):
+        form = DateFilterForm(request.POST)
+        if form.is_valid():
+            start_date = form.cleaned_data['start_date']
+            end_date = form.cleaned_data['end_date']
+            start_date = start_date.replace(hour=0, minute=0, second=0, microsecond=0)
+            end_date = end_date.replace(hour=23, minute=59, second=59, microsecond=999)
+            complaints = Complain.objects.filter(complain_date__range=(start_date, end_date))
+            if complaints:
+                total_complaints = complaints.count()
+                complaint_types = []
+                complaint_percentages = []
+                for complaint_type, _ in Complain.COMPLAIN_CATEGORY:
+                    count = complaints.filter(complain_type=complaint_type).count()
+                    percentage = (count / total_complaints) * 100
+                    complaint_percentages.append(percentage)
+                    complaint_types.append(complaint_type)
+            else:
+                return render(request, 'noanalytics.html')
+
+        else:
+            complaint_types = []
+            complaint_percentages = []
+
+
+        context = {
+            'complaint_types': complaint_types,
+            'complaint_percentages': complaint_percentages,
+            'form': form,
+        }
+
+        return render(request, 'analytics.html', context)
+
 
 class Profile(View):
     def get(self, request, pk):
@@ -500,6 +549,7 @@ class Profile(View):
                     return HttpResponse("User does not exist")
         return HttpResponse("Form submission failed or encountered an error")
 
+
 class CustomPasswordResetView(PasswordResetView):
     def form_valid(self, form):
         try:
@@ -531,3 +581,24 @@ class otpfun(View):
         else:
             messages.error(request, 'OTP Not Valid')
             return render(request, 'otpverification.html', {'form': form})
+
+
+class AnalysisSheetView(FormView):
+    form_class = DateFilterForm
+    template_name = 'analytics_sheet_download.html'
+    success_url = reverse_lazy('AnalysisSheet')
+
+    def form_valid(self, form):
+        start_date = form.cleaned_data['start_date']
+        end_date = form.cleaned_data['end_date']
+        start_date = start_date.replace(hour=0, minute=0, second=0, microsecond=0)
+        end_date = end_date.replace(hour=23, minute=59, second=59, microsecond=999)
+        complaints = Complain.objects.filter(complain_date__range=[start_date, end_date])
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="complaints.csv"'
+        writer = csv.writer(response)
+        writer.writerow(['Complain Type', 'Complain Subject', 'Complain Date', 'Description', 'Status'])
+        for complaint in complaints:
+            writer.writerow([complaint.complain_type, complaint.subject, complaint.complain_date, complaint.description, complaint.status])
+
+        return response

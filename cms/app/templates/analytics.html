@@ -5,7 +5,36 @@
 
 {% block content %}
 <div class="container shadow-lg p-5 mt-5 bg-body rounded">
-    <h1 style="text-align:center;">Complaint Analytics (Percentage)</h1>
+<form method="post">{% csrf_token %}
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="{{ form.start_date.id_for_label }}">Start Date:</label>
+                {{ form.start_date }}
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="{{ form.end_date.id_for_label }}">End Date:</label>
+
+                {{ form.end_date }}
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group"><br>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </div>
+</form>
+    <div class="row justify-content-end mt-3">
+        <div class="col-md-2 text-right">
+            <a href="{% url 'AnalysisSheet' %}" class="download-button">
+                <button type="submit" class="btn btn-primary">Download Sheet</button>
+            </a>
+        </div>
+    </div>
+    <h1 class="mt-3" style="text-align:center;">Complaint Analytics (Percentage)</h1>
 
     <div style="width: 70%; margin: 20px auto;" class="mt-5">
         <canvas id="complaintChart" width="400" height="200"></canvas>

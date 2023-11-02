@@ -18,7 +18,7 @@ from django.urls import path
 from .views import LoginPage, UserLogout, CreateGrievanceUserView, CreateStudent, AllShowUsers, DeleteAllUser, \
     search, UpdateUserDetails, CreateGrievanceView, ShowStudents, SearchStudents, ShowTeachers, SearchTeachers, \
     Student_Show_Grievance, ShowAllGrivances, UpdateGrivanceStatus, Home, analytics_view, DeleteTeachersUser, \
-    DeleteStudentUser, Profile, CustomPasswordResetView, otpfun
+    DeleteStudentUser, Profile, CustomPasswordResetView, otpfun, AnalysisSheetView
 from django.contrib.auth.views import (
     PasswordResetDoneView,
     PasswordResetConfirmView,
@@ -39,8 +39,8 @@ urlpatterns = [
          PasswordResetCompleteView.as_view(template_name='password_reset_complete.html'),
          name='password_reset_complete'),
     path('home/', Home, name='LoginHome'),
-    # path('login/', LoginPage.as_view(), name='LoginPage'),
-    path('analytics/', analytics_view, name='Analytics'),
+    path('home/analytics/', analytics_view.as_view(), name='Analytics'),
+    path('home/analytics/downloadsheet/', AnalysisSheetView.as_view(), name='AnalysisSheet'),
     path('home/allusers/', AllShowUsers.as_view(), name='ShowUsers'),
     path('home/showstudents/', ShowStudents.as_view(), name='ShowStudents'),
     path('home/showteachers/', ShowTeachers, name='ShowTeachers'),
