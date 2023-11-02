@@ -4,7 +4,6 @@ from django.core.validators import MaxValueValidator
 from django.utils import timezone
 
 
-
 # Create your models here.
 class Student(models.Model):
     COURSE_CHOICES = (
@@ -341,7 +340,7 @@ class Complain(models.Model):
     complain_date = models.DateTimeField(blank=True, null=True)
     status = models.CharField(choices=STATUS_CHOICES, max_length=100, default='Pending')
     remarks = models.CharField(max_length=255, blank=True, null=True)
-    createed_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updatestatustime = models.DateTimeField(auto_now=True)
 
     def __str__(self):
