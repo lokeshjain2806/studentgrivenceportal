@@ -583,7 +583,9 @@ class otpfun(View):
             return render(request, 'otpverification.html', {'form': form})
 
 
-class AnalysisSheetView(FormView):
+@method_decorator(login_required(login_url="/"), name='dispatch')
+class AnalysisSheetView(PermissionRequiredMixin, FormView):
+    permission_required = "app.can_view_superuser"
     form_class = DateFilterForm
     template_name = 'analytics_sheet_download.html'
     success_url = reverse_lazy('AnalysisSheet')
