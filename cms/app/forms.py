@@ -129,7 +129,7 @@ class UpdateGrievanceStatusForm(forms.ModelForm):
                               widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     status = forms.ChoiceField(label='Update Status', choices=Complain.STATUS_CHOICES,
                                       widget=forms.Select(attrs={'class': 'form-control'}))
-    remarks = forms.CharField(label='Update Status',
+    remarks = forms.CharField(label='Remarks',
                                       widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     class Meta:

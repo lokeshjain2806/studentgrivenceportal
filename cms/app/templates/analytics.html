@@ -5,28 +5,29 @@
 
 {% block content %}
 <div class="container shadow-lg p-5 mt-5 bg-body rounded">
-<form method="post">{% csrf_token %}
-    <div class="row">
-        <div class="col-md-4">
-            <div class="form-group">
-                <label for="{{ form.start_date.id_for_label }}">Start Date:</label>
-                {{ form.start_date }}
+    <form method="post">{% csrf_token %}
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="{{ form.start_date.id_for_label }}">Start Date:</label>
+                    {{ form.start_date }}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="{{ form.end_date.id_for_label }}">End Date:</label>
+                    {{ form.end_date }}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <br>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="form-group">
-                <label for="{{ form.end_date.id_for_label }}">End Date:</label>
+    </form>
 
-                {{ form.end_date }}
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="form-group"><br>
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-        </div>
-    </div>
-</form>
     <div class="row justify-content-end mt-3">
         <div class="col-md-2 text-right">
             <a href="{% url 'AnalysisSheet' %}" class="download-button">
@@ -34,15 +35,57 @@
             </a>
         </div>
     </div>
-    <h1 class="mt-3" style="text-align:center;">Complaint Analytics (Percentage)</h1>
 
-    <div style="width: 70%; margin: 20px auto;" class="mt-5">
-        <canvas id="complaintChart" width="400" height="200"></canvas>
+    <div class="row justify-content-center">
+        <!-- Chart 1: Complaint Analytics (Percentage) -->
+        <div class="col-md-6">
+            <h1 class="mt-3" style="text-align: center;">Complaint Analytics (Percentage)</h1>
+            <div style="width: 100%; margin: 20px auto;" class="mt-5">
+                <canvas id="complaintChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Chart 2: Line Chart -->
+        <div class="col-md-6">
+            <h1 class="mt-3" style="text-align: center;">Line Chart</h1>
+            <div style="width: 100%; margin: 20px auto;" class="mt-5">
+                <canvas id="lineChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+
+        <!-- Chart 3: Doughnut Chart -->
+        <div class="col-md-6">
+            <h1 class="mt-3" style="text-align: center;">Doughnut Chart</h1>
+            <div style="width: 100%; margin: 20px auto;" class="mt-5">
+                <canvas id="doughnutChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+            <!-- Chart 4: Pie Chart -->
+            <div class="col-md-6">
+                <h1 class="mt-3" style="text-align: center;">Pie Chart</h1>
+                <div style="width: 100%; margin: 20px auto;" class="mt-5">
+                    <canvas id="pieChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+            <!-- Chart 5: Radar Chart -->
+            <div class="col-md-6">
+                <h1 class="mt-3" style="text-align: center;">Radar Chart</h1>
+                <div style="width: 100%; margin: 20px auto;" class="mt-5">
+                    <canvas id="radarChart" width="400" height="200"></canvas>
+                </div>
+            </div>
     </div>
 </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
     var complaintTypes = {{ complaint_types|safe }};
     var complaintPercentages = {{ complaint_percentages|safe }};
     var ctx = document.getElementById('complaintChart').getContext('2d');
@@ -53,8 +96,8 @@
             datasets: [{
                 label: 'Complaint Percentage',
                 data: complaintPercentages,
-                backgroundColor: '#FFFF00', // Bar color
-                borderColor: 'black', // Border color
+                backgroundColor: '#FFFF00',
+                borderColor: 'black',
                 borderWidth: 1
             }]
         },
@@ -62,14 +105,14 @@
             scales: {
                 y: {
                     beginAtZero: true,
-                    max: 100, // Set the maximum value to 100
+                    max: 100,
                     ticks: {
-                        stepSize: 10, // Define tick intervals
+                        stepSize: 10,
                     }
                 },
-                x: {  // x-axis configuration
+                x: {
                     ticks: {
-                        fontColor: 'black', // Set the font color for x-axis labels (complaint types)
+                        fontColor: 'black',
                     }
                 }
             },
@@ -77,7 +120,184 @@
                 legend: {
                     display: true,
                     labels: {
-                        fontColor: 'black', // Set the font color for legend labels
+                        fontColor: 'black',
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+<script>
+    var complaintTypes = {{ complaint_types|safe }};
+    var complaintPercentages = {{ complaint_percentages|safe }};
+    var ctx = document.getElementById('lineChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: complaintTypes,
+            datasets: [{
+                label: 'Complaint Percentage',
+                data: complaintPercentages,
+                backgroundColor: 'rgba(255, 255, 0, 0.2)',
+                borderColor: 'black',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        stepSize: 10,
+                    }
+                },
+                x: {
+                    ticks: {
+                        fontColor: 'black',
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    labels: {
+                        fontColor: 'black',
+                    }
+                }
+            }
+        }
+    });
+</script>
+<script>
+    var complaintTypes = {{ complaint_types|safe }};
+    var complaintPercentages = {{ complaint_percentages|safe }};
+    var colors = [
+        'red',
+        'green',
+        'blue',
+        'orange',
+        'purple',
+        'pink',
+        'cyan',
+        'magenta',
+        'yellow',
+        'lightblue',
+        'lightgreen',
+        'lightpink',
+        'lightpurple',
+        'lightcyan',
+        'lightmagenta',
+        'lightyellow',
+        'darkred',
+        'darkgreen',
+        'darkblue'
+    ];  // Define an array of colors
+
+    var ctx = document.getElementById('doughnutChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: complaintTypes,
+            datasets: [{
+                label: 'Complaint Percentage',
+                data: complaintPercentages,
+                backgroundColor: colors.slice(0, complaintTypes.length),  // Use the colors array
+                borderColor: 'black',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        stepSize: 10,
+                    }
+                },
+                x: {
+                    ticks: {
+                        fontColor: 'black',
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    labels: {
+                        fontColor: 'black',
+                    }
+                }
+            }
+        }
+    });
+</script>
+<script>
+    var complaintTypes = {{ complaint_types|safe }};
+    var complaintPercentages = {{ complaint_percentages|safe }};
+    var ctx = document.getElementById('pieChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: complaintTypes,
+            datasets: [{
+                label: 'Complaint Percentage',
+                data: complaintPercentages,
+                backgroundColor: colors.slice(0, complaintTypes.length),
+                borderColor: 'black',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    display: true,
+                    labels: {
+                        fontColor: 'black',
+                    }
+                }
+            }
+        }
+    });
+</script>
+<script>
+    var complaintTypes = {{ complaint_types|safe }};
+    var complaintPercentages = {{ complaint_percentages|safe }};
+    var ctx = document.getElementById('radarChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: complaintTypes,
+            datasets: [{
+                label: 'Complaint Percentage',
+                data: complaintPercentages,
+                backgroundColor: 'rgba(255, 255, 0, 0.2)',
+                borderColor: 'black',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        stepSize: 10,
+                    }
+                },
+                x: {
+                    ticks: {
+                        fontColor: 'black',
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    labels: {
+                        fontColor: 'black',
                     }
                 }
             }
