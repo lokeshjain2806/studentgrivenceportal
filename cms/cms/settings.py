@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'matplotlib',
     'crispy_forms',
-    'debug_toolbar',
+    #'debug_toolbar',
     'app',
 ]
 
@@ -58,7 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    #'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'cms.urls'
@@ -145,13 +145,13 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-INTERNAL_IPS = [
-    '127.0.0.1',
-]
-DEBUG_TOOLBAR_CONFIG = {
-    'SHOW_TOOLBAR_CALLBACK': lambda request: DEBUG,
-    'INTERCEPT_REDIRECTS': False,
-}
+# INTERNAL_IPS = [
+#     '127.0.0.1',
+# ]
+# DEBUG_TOOLBAR_CONFIG = {
+#     'SHOW_TOOLBAR_CALLBACK': lambda request: DEBUG,
+#     'INTERCEPT_REDIRECTS': False,
+# }
 
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
