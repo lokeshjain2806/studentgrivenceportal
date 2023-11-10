@@ -155,6 +155,7 @@
     {% endif %}
 </nav>
 
+
 {% block content %}
 
 
@@ -225,6 +226,7 @@
 </footer>
 </div>
     {% endif %}
+
     <script>
         const marquee = document.getElementById('myMarquee');
             function pauseMarquee() {
@@ -238,7 +240,7 @@
     </script>
 {% endblock content %}
     {% if user.is_authenticated %}
-        <script type="text/javascript">
+    <script type="text/javascript">
             (function(d, m){
                 var kommunicateSettings =
                     {"appId":"3d3b24955b1b30ef380624ac73cef63","popupWidget":true,"automaticChatOpenOnNavigation":true};
@@ -249,6 +251,16 @@
             })(document, window.kommunicate || {});
         /* NOTE : Use web server to view HTML files as real-time update will not work if you directly open the HTML file in the browser. */
         </script>
+            <!-- Footer -->
+        <footer class="bg-dark text-center text-white fixed-bottom">
+          <!-- Grid container -->
+          <div class="container p-4">
+              <p>
+                K.R. MANGALAM UNIVERSITY CONTACT NO. +91 99999 99999.
+              </p>
+          </div>
+        </footer>
+        <!-- Footer -->
     {% endif %}
 
  <!-- Bootstrap JS and jQuery (optional) -->

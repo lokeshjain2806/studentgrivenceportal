@@ -368,7 +368,7 @@ class UpdateGrivanceStatus(PermissionRequiredMixin, View):
                 'subject': grievance.subject,
                 'description': grievance.description,
                 'status': grievance.status,
-                'remarks' : grievance.remarks,
+                'remarks': grievance.remarks,
             }
             form = UpdateGrievanceStatusForm(initial=initial_data)
             return render(request, 'updategrievancestatus.html', {'form': form})
