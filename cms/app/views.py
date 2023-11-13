@@ -16,8 +16,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import ListView, FormView
-from .forms import GrievanceSignupform, LoginForm, StudentSignupform, CreateGrievanceForm, UpdateGrievanceStatusForm, \
-    OtpVerificationForm, DateFilterForm
+from .forms import GrievanceSignupform, LoginForm, StudentSignupform, \
+    CreateGrievanceForm, UpdateGrievanceStatusForm, OtpVerificationForm, DateFilterForm
 from .models import Student, Complain
 from django.contrib.auth.models import Permission
 
