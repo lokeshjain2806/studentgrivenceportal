@@ -34,9 +34,9 @@ class LoginPage(View):
         form = LoginForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
-            print(username)
+            # print(username)
             password = form.cleaned_data['password']
-            print(password)
+            # print(password)
             user = authenticate(request, username=username, password=password)
             if user:
                 num_numbers = 4
@@ -45,13 +45,13 @@ class LoginPage(View):
                     random_1_digit = random.randint(1, 9)
                     random_numbers.append(str(random_1_digit))
                 otp = int(''.join(random_numbers))
-                print(otp)
+                # print(otp)
                 request.session['user'] = user.id
-                print('3')
+                # print('3')
                 request.session['expected_otp'] = otp
-                print('4')
+                # print('4')
                 request.session.save()
-                print('5')
+                # print('5')
                 subject = 'Login Verification'
                 message = f'Otp For Login: {otp}. Otp is valid for 10 minutes only.'
                 from_email = 'reset9546@gmail.com'
