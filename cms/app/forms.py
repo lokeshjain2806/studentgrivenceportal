@@ -144,3 +144,7 @@ class OtpVerificationForm(forms.Form):
 class DateFilterForm(forms.Form):
     start_date = forms.DateTimeField(label='Start Date', widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}))
     end_date = forms.DateTimeField(label='End Date', widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}))
+
+class LoginOtpForm(forms.Form):
+    username = forms.CharField(label='Username',
+                               widget=forms.TextInput(attrs={'class': 'form-control'}))

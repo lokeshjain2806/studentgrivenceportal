@@ -17,7 +17,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import ListView, FormView
 from .forms import GrievanceSignupform, LoginForm, StudentSignupform, \
-    CreateGrievanceForm, UpdateGrievanceStatusForm, OtpVerificationForm, DateFilterForm
+    CreateGrievanceForm, UpdateGrievanceStatusForm, OtpVerificationForm, DateFilterForm, LoginOtpForm
 from .models import Student, Complain
 from django.contrib.auth.models import Permission
 
@@ -39,26 +39,31 @@ class LoginPage(View):
             # print(password)
             user = authenticate(request, username=username, password=password)
             if user:
-                num_numbers = 4
-                random_numbers = []
-                for i in range(num_numbers):
-                    random_1_digit = random.randint(1, 9)
-                    random_numbers.append(str(random_1_digit))
-                otp = int(''.join(random_numbers))
-                # print(otp)
-                request.session['user'] = user.id
-                # print('3')
-                request.session['expected_otp'] = otp
-                # print('4')
-                request.session.save()
-                # print('5')
-                subject = 'Login Verification'
-                message = f'Otp For Login: {otp}. Otp is valid for 10 minutes only.'
-                from_email = 'reset9546@gmail.com'
-                recipient_list = [user.email]
-                fail_silently = False
-                send_mail(subject, message, from_email, recipient_list, fail_silently)
-                return redirect('OtpVerification')
+                login(request, user)
+                if request.user.is_superuser:
+                    return redirect('Analytics')
+                else:
+                    return redirect('LoginHome')
+                # num_numbers = 4
+                # random_numbers = []
+                # for i in range(num_numbers):
+                #     random_1_digit = random.randint(1, 9)
+                #     random_numbers.append(str(random_1_digit))
+                # otp = int(''.join(random_numbers))
+                # # print(otp)
+                # request.session['user'] = user.id
+                # # print('3')
+                # request.session['expected_otp'] = otp
+                # # print('4')
+                # request.session.save()
+                # # print('5')
+                # subject = 'Login Verification'
+                # message = f'Otp For Login: {otp}. Otp is valid for 10 minutes only.'
+                # from_email = 'reset9546@gmail.com'
+                # recipient_list = [user.email]
+                # fail_silently = False
+                # send_mail(subject, message, from_email, recipient_list, fail_silently)
+                # return redirect('OtpVerification')
             else:
                 messages.error(request, 'Username Or Password Are Not Correct')
                 return redirect('Home')
@@ -560,6 +565,39 @@ class CustomPasswordResetView(PasswordResetView):
             return redirect('password-reset')
         return super().form_valid(form)
 
+
+class OtpLogin(View):
+    def get(self, request):
+        form = LoginOtpForm
+        return render(request, 'loginviaotp.html', {'form': form})
+
+    def post(self, request):
+        form = LoginOtpForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            a = User.objects.filter(username=username).exists()
+            if a:
+                user = User.objects.get(username=username)
+                num_numbers = 4
+                random_numbers = []
+                for i in range(num_numbers):
+                    random_1_digit = random.randint(1, 9)
+                    random_numbers.append(str(random_1_digit))
+                otp = int(''.join(random_numbers))
+                # print(otp)
+                request.session['user'] = user.id
+                # print('3')
+                request.session['expected_otp'] = otp
+                # print('4')
+                request.session.save()
+                # print('5')
+                subject = 'Login Verification'
+                message = f'Otp For Login: {otp}. Otp is valid for 10 minutes only.'
+                from_email = 'reset9546@gmail.com'
+                recipient_list = [user.email]
+                fail_silently = False
+                send_mail(subject, message, from_email, recipient_list, fail_silently)
+                return redirect('OtpVerification')
 
 class otpfun(View):
     def get(self, request):
